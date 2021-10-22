@@ -66,35 +66,62 @@ void setup() {
 }
 
 void loop() {
-  for (int i = 0; i < PINS; i++)
-    if (input_enable[i] == true) {
-      {value = adc->analogRead(adc_pins[i]);
-          Serial.print(" A:");
-          Serial.print(i);
-          Serial.println();
-          Serial.print(" Raw:");
-          Serial.print(value);
-          Serial.print(" Converted:");
-          Serial.print(value * 3.3 / adc->adc0->getMaxValue(), 2);
-          Serial.println();
-          counter = counter+1;
-          Serial.print("counter: ");
-          Serial.print(counter);
-          Serial.println();
-          
-          msgOut.buf[0] = (value >> 8) & 0xff;
-          msgOut.buf[1] = value & 0xff;
+  
+      for (int i = 0; i < PINS; i++)
+        if (input_enable[i] == true) {
+          {value = adc->analogRead(adc_pins[i]);
+              Serial.print(" A:");
+              Serial.print(i);
+              Serial.println();
+              Serial.print(" Raw:");
+              Serial.print(value);
+              Serial.print(" Converted:");
+              Serial.print(value * 3.3 / adc->adc0->getMaxValue(), 2);
+              Serial.println();
+              counter = counter+1;
+              Serial.print("counter: ");
+              Serial.print(counter);
+              Serial.println();
+              
+              msgOut.buf[0] = (value >> 8) & 0xff;
+              msgOut.buf[1] = value & 0xff;
 
-          extended.id = 1;
-          msgOut.len = 2;
-          msgOut.id = counter;
-          Can0.write(msgOut);
-          msgOut.buf[1]++;
+              extended.id = 0;
+              msgOut.len = 2;
+              msgOut.id = i+1;
+              Can0.write(msgOut);
+              msgOut.buf[1]++;
+              delay(100);
 
+          }  
+        }
+      
+      
+  // Create and send a simulated state report frame from Engine Node (Node id=2), Fire state and all valves open (OH NO)   
+  msgOut.buf[0] = 0x00;
+  msgOut.buf[1] = 0x20;
+  msgOut.buf[2] = 0xff;
+  msgOut.buf[3] = 0xff;
 
-      }  
-    }
+  extended.id = 0;
+  msgOut.len = 4;
+  msgOut.id = 3;
+  Can0.write(msgOut);
+  msgOut.buf[1]++;
+  
+  // Create and send a simulated state report frame from Prop Node (Node id=3), Fire state and all valves open (OH NO)   
+  msgOut.buf[0] = 0x00;
+  msgOut.buf[1] = 0x20;
+  msgOut.buf[2] = 0xff;
+  msgOut.buf[3] = 0xff;
 
+  msgOut.id = 4;
+  Can0.write(msgOut);
+  msgOut.buf[1]++;
+        
+      
+
+  
 // SV duty cycle and driver chip testing
 // analogWrite(2, 256);
 // analogWrite(6, 256);
