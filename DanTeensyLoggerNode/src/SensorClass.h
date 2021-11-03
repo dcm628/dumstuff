@@ -51,13 +51,14 @@ class SENSOR
     // read bit size should be added for external ADC and other sources
 
   public:
-    SENSOR(string setSens_Name, SensorType setSensType, int setADCinput, int setSens_Sample_rate);
+    SENSOR(string setSens_Name, SensorType setSensType, int setADCinput, int setSensSampleRateHigh, int setSensSampleRateLow);
 
     // Access functions defined in place
     string getSensorName(){return sens_name;}
     SensorType getSensorType(){return senstype;}
     int getADCinput(){return ADCinput;}
-    int getSensSampleRate(){return sens_sample_rate;}
+    //int getSensSampleRateHigh(){return sens_sample_rate_high;}
+    int getSensSampleRateLow(){return sens_sample_rate_low;}
     int getCurrentRawValue(){return currentRawValue;}
 
     // further fuctions defined in SensorClass.cpp
