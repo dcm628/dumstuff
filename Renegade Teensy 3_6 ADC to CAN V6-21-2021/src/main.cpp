@@ -11,23 +11,23 @@
 using std::string;
 
 ///// NODE DECLARATION!!!!!
-int node = 2; //engine node = 2, prop node = 3
+int node = 3; //engine node = 2, prop node = 3
 
 ///// ADC /////
 ADC* adc = new ADC();
-#define PINS 23 //was default 25 but skipping two pins for I2C bus use?
+#define PINS 25 
 #define PINS_DIFF 2
-uint8_t adc_pins[] = {A0, A1, A2, A3, A6, A7, A8, A9, A10,
+uint8_t adc_pins[] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10,
                       A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24};
 uint8_t adc_pins_diff[] = {A10, A11};
 
 
 //Accursed way to do different sample rate sensor reads
 bool input_enablediff[2] = {};
-bool input_enable1[23] = {};
-bool input_enable10[23] = {};
-bool input_enable100[23] = {};
-bool input_enable1000[23] = {};
+bool input_enable1[25] = {};
+bool input_enable10[25] = {};
+bool input_enable100[25] = {};
+bool input_enable1000[25] = {};
 
 elapsedMillis sinceRead1;
 elapsedMillis sinceRead10;
@@ -66,6 +66,26 @@ int counter = 0;
 //SENSOR tc3 {"LOX Tank Middle TC", "tcktype",10,1};
 //SENSOR tc4 {"LOX Tank Upper TC", "tcktype",12,1};
 
+//Sensor --- ADC channel
+/* Engine Node:
+A0 - LC1
+A1 - LC2
+A2 - LC3
+A5 - Chamber1 PT
+A6 - Chamber2 PT
+A7 - Fuel Inlet Prop side PT
+A8 - Fuel Injector PT
+A9 - Lox Inlet Prop side PT
+Prop Node:
+A3 - Main Valve Pneumatic PT
+A4 - Fuel Dome Reg PT
+A5 - Lox Dome Reg PT
+A6 - Fuel Tank PT
+A7 - Lox Tank PT
+A8 - Fuel High Press PT
+A9 - Lox High Press PT */
+
+
 
 ///// SV Control /////
 int SVenable_1_pin = 24;
@@ -74,30 +94,35 @@ int SVenable_3_pin = 26;
 int SVenable_4_pin = 27;
 
 ///// Temp Sensor for TC Cold Junction /////
-Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
-int roundedtemp;
+/* Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
+int roundedtemp; */
 
 //-------------------------------------------------------//
 void setup() {
   //assign which sample rate array to choose for each input enable
   if (node == 2) //Engine Node ADC pins to read sensors on
     {
-    input_enablediff[0] = 1;       //WRONG ALLOCATIONS, just a guess to get code setup
-    input_enablediff[1] = 1;
-    input_enable100[6] = 1;
-    input_enable100[7] = 1;
-    input_enable1000[8] = 1;
-    input_enable1000[9] = 1;
-    input_enable1000[10] = 1;
+    input_enablediff[0] = 0;        //TC
+    input_enablediff[1] = 0;        //TC
+    input_enable100[0] = 1;         //LC1
+    input_enable100[1] = 1;         //LC2
+    input_enable100[2] = 1;         //LC2
+    input_enable1000[6] = 1;        //Chamber1 PT
+    input_enable1000[5] = 1;        //Chamber2 PT
+    input_enable100[7] = 1;          //Fuel Inlet Prop Side PT
+    input_enable10[8] = 1;         //Fuel Injector PT
+    input_enable10[9] = 1;         //Lox Inlet Prop Side PT
     } else if (node == 3)  //Prop Node ADC pins to read sensors on
     {
-    input_enablediff[0] = 1;       //WRONG ALLOCATIONS, just a guess to get code setup
-    input_enablediff[1] = 1;
-    input_enable10[7] = 1;
-    input_enable100[8] = 1;
-    input_enable100[9] = 1;
-    input_enable100[10] = 1;
-    input_enable100[11] = 1;
+    input_enablediff[0] = 0;        //TC
+    input_enablediff[1] = 0;        //TC
+    input_enable1[3] = 0;           //Main Valve Pneumatic PT
+    input_enable10[4] = 0;          //Fuel Dome Reg PT
+    input_enable10[5] = 0;          //Lox Dome Reg PT
+    input_enable100[6] = 0;         //Fuel Tank PT
+    input_enable100[7] = 0;         //Lox Tank PT
+    input_enable100[8] = 0;         //Fuel High Press PT
+    input_enable100[9] = 1;         //Lox High Press PT
     }
     
   // pin setup
@@ -113,17 +138,17 @@ void setup() {
   // reference can be ADC_REFERENCE::REF_3V3, ADC_REFERENCE::REF_1V2 or ADC_REFERENCE::REF_EXT.
   //adc->setReference(ADC_REFERENCE::REF_1V2, ADC_0); // change all 3.3 to 1.2 if you change the reference to 1V2
 
-  adc->adc0->setAveraging(16);                                    // set number of averages
+  adc->adc0->setAveraging(32);                                    // set number of averages
   adc->adc0->setResolution(16);                                   // set bits of resolution
   adc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED_16BITS); // change the conversion speed
-  adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_HIGH_SPEED);     // change the sampling speed
+  adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);     // change the sampling speed
   //adc->adc0->recalibrate();
 
 ///// ADC1 /////
-  adc->adc1->setAveraging(16);                                    // set number of averages
+  adc->adc1->setAveraging(32);                                    // set number of averages
   adc->adc1->setResolution(16);                                   // set bits of resolution
   adc->adc1->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED_16BITS); // change the conversion speed
-  adc->adc1->setSamplingSpeed(ADC_SAMPLING_SPEED::VERY_HIGH_SPEED);     // change the sampling speed
+  adc->adc1->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);     // change the sampling speed
   //adc->adc1->recalibrate();
 
   delay(500);
@@ -143,7 +168,7 @@ pinMode(27, OUTPUT); //LOW drives it high to enable driver
 
 
 
-///// Temp Sensor for TC Cold Junction /////
+/* ///// Temp Sensor for TC Cold Junction /////
 tempsensor.begin(0x19);
   //  A2 A1 A0 address
   //  0  0  0   0x18  this is the default address
@@ -161,7 +186,7 @@ tempsensor.setResolution(2);
   //  1    0.25°C      65 ms
   //  2    0.125°C     130 ms
   //  3    0.0625°C    250 ms
-
+ */
 }
 
 void loop() 
@@ -179,7 +204,7 @@ void loop()
   }
 
   ///// Temp Sensor for TC Cold Junction Only/////
-  if (sinceReadRTD >= 130) {       //sets the if loop to only run if at least the number given milliseconds have passed
+/*   if (sinceReadRTD >= 130) {       //sets the if loop to only run if at least the number given milliseconds have passed
     tempsensor.shutdown_wake(0);
     float c = tempsensor.readTempC();
     roundedtemp = int(c + 0.5);
@@ -195,20 +220,20 @@ void loop()
     // message.buf[6] = (roundedtemp >> 8) & 0xff;
     // message.buf[7] = roundedtemp & 0xff;
     message.len = 2;  // number of bytes the message length uses
-    message.id = 666 * node; // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
+    message.id = 666 + (25 + node); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end.
     Can0.write(message); //message send
     message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
   sinceReadRTD = 0; //resets timer to zero each time the ADC is read
-  }
+  } */
 
   if (sinceRead1 >= 1000) {       //sets the if loop to only run if at least the number given milliseconds have passed
     for (int i = 0; i < PINS; i++)
       if (input_enable1[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" Raw:");
+            Serial.print(" A");
+            Serial.print(i);
+            Serial.print(": ");
             Serial.print(value);
-            //Serial.print(" Converted:");
-            //Serial.print((value) * 3.3 / adc->adc0->getMaxValue(), 5);
             Serial.println();
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
@@ -221,7 +246,7 @@ void loop()
             // message.buf[6] = (value >> 8) & 0xff;
             // message.buf[7] = value & 0xff;
             message.len = 2;  // number of bytes the message length uses
-            message.id = i * node; // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
+            message.id = i + (25 * node); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
             Can0.write(message); //message send
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
@@ -232,10 +257,10 @@ void loop()
     for (int i = 0; i < PINS; i++)
       if (input_enable10[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" Raw:");
+            Serial.print(" A");
+            Serial.print(i);
+            Serial.print(": ");
             Serial.print(value);
-            //Serial.print(" Converted:");
-            //Serial.print((value) * 3.3 / adc->adc0->getMaxValue(), 5);
             Serial.println();
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
@@ -248,7 +273,7 @@ void loop()
             // message.buf[6] = (value >> 8) & 0xff;
             // message.buf[7] = value & 0xff;
             message.len = 2;  // number of bytes the message length uses
-            message.id = i * node; // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
+            message.id = i + (25 * node); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
             Can0.write(message); //message send
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
@@ -256,10 +281,10 @@ void loop()
     for (int i = 0; i < PINS_DIFF; i++) //TC READS
       if (input_enablediff[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" Raw:");
+            Serial.print(" A");
+            Serial.print(i);
+            Serial.print(": ");
             Serial.print(value);
-            //Serial.print(" Converted:");
-            //Serial.print((value) * 3.3 / adc->adc0->getMaxValue(), 5);
             Serial.println();
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
@@ -272,7 +297,7 @@ void loop()
             // message.buf[6] = (value >> 8) & 0xff;
             // message.buf[7] = value & 0xff;
             message.len = 2;  // number of bytes the message length uses
-            message.id = (i+8) * node; // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
+            message.id = (i+10) * (25 * node); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
             Can0.write(message); //message send
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
@@ -284,15 +309,18 @@ void loop()
     for (int i = 0; i < PINS; i++)
       if (input_enable100[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" Raw:");
+            Serial.print(" A");
+            Serial.print(i);
+            Serial.print(": ");
             Serial.print(value);
-            //Serial.print(" Converted:");
-            //Serial.print((value) * 3.3 / adc->adc0->getMaxValue(), 5);
             Serial.println();
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
             message.buf[0] = (value >> 8) & 0xff;
             message.buf[1] = value & 0xff;
+            Serial.print(message.buf[0]);
+            Serial.print(": ");
+            Serial.print(message.buf[1]);
             // message.buf[2] = (value >> 8) & 0xff;
             // message.buf[3] = value & 0xff;
             // message.buf[4] = (value >> 8) & 0xff;
@@ -300,7 +328,7 @@ void loop()
             // message.buf[6] = (value >> 8) & 0xff;
             // message.buf[7] = value & 0xff;
             message.len = 2;  // number of bytes the message length uses
-            message.id = i * node; // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
+            message.id = i + (25 * node); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
             Can0.write(message); //message send
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
@@ -312,10 +340,10 @@ void loop()
     for (int i = 0; i < PINS; i++)
       if (input_enable1000[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" Raw:");
+            Serial.print(" A");
+            Serial.print(i);
+            Serial.print(": ");
             Serial.print(value);
-            //Serial.print(" Converted:");
-            //Serial.print((value) * 3.3 / adc->adc0->getMaxValue(), 5);
             Serial.println();
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
@@ -328,7 +356,7 @@ void loop()
             // message.buf[6] = (value >> 8) & 0xff;
             // message.buf[7] = value & 0xff;
             message.len = 2;  // number of bytes the message length uses
-            message.id = i * node; // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
+            message.id = i + (25 * node); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
             Can0.write(message); //message send
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
@@ -337,28 +365,28 @@ void loop()
   }
 
 // SV duty cycle and driver chip testing
-/*   digitalWrite(24, HIGH);
-  digitalWrite(25, HIGH);
-  digitalWrite(26, HIGH);
-  digitalWrite(27, HIGH);
+  //digitalWrite(24, HIGH);
+  //digitalWrite(25, HIGH);
+  //digitalWrite(26, HIGH);
+  //digitalWrite(27, HIGH);
 
-  analogWrite(2, 256);
-  analogWrite(5, 256);
-  analogWrite(6, 256);
+  //analogWrite(2, 256);      //High Press
+  //analogWrite(5, 256);      //High Vent
+/*   analogWrite(6, 256);
   analogWrite(7, 256);
   analogWrite(8, 256);
-  analogWrite(9, 256);
+  analogWrite(9, 256); */
 
-  delay(25);
+  //delay(25);
 
-  analogWrite(2, 75);
-  analogWrite(5, 51);
-  analogWrite(6, 51);
+  //analogWrite(2, 125);
+  //analogWrite(5, 125);
+/*   analogWrite(6, 51);
   analogWrite(7, 51);
   analogWrite(8, 51);
   analogWrite(9, 55); 
 
-  delay(250);
+  delay(250); */
 
   analogWrite(2, 0);
   analogWrite(5, 0);
@@ -366,6 +394,6 @@ void loop()
   analogWrite(7, 0);
   analogWrite(8, 0);
   analogWrite(9, 0); 
-  delay(3000);*/
+  //delay(3000);
 
 }
