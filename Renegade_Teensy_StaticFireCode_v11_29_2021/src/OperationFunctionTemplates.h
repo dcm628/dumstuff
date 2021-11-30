@@ -4,6 +4,7 @@
 #define BITFLAG_SIZE 16
 
 #include "ValveClass.h"
+#include "PyroClass.h"
 #include "SensorClass.h"
 #include <array>
 #include <bitset>
@@ -23,11 +24,13 @@ void valveTasks(const std::array<T, size>& valveArray, int& nodeID)
     // iterate through valve array and run the stateOperations method
     for(auto valve : valveArray)
     {
-        if (valve->valveNodeID == nodeID)
-            {
+        //Valve valve->getValveNodeID();
+    
+        //if (valve->valveNodeID == nodeID)
+            //{
             valve->stateOperations();
             //Serial.print("LoopRan");
-            }
+            //}
     }
 }
 
@@ -37,13 +40,27 @@ void pyroTasks(const std::array<T, size>& pyroArray, int& nodeID)
     // iterate through valve array and run the stateOperations method
     for(auto pyro : pyroArray)
     {
-        if (pyro->pyroNodeID == nodeID)
-            {
+        //Pyro pyroNodeID{pyro->getPyroNodeID()};
+        
+        //if (pyro->pyroNodeID == nodeID)
+            //{
             pyro->stateOperations();
             //Serial.print("LoopRan");
-            }
+            //}
     }
 }
+
+/* //Alternate attempt at valveTasks and pyroTasks without templates
+void valveTasks()
+{
+
+}
+
+
+void pyroTasks()
+{
+    
+} */
 
 // CALL THIS FUNCTION ONCE IN SETUP, THIS SETS THE VALVE PINMODES
     // make sure to pass this function valveArray, as defined in ValveDefinitions.h

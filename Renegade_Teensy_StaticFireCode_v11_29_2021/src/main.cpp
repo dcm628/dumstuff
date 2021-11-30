@@ -7,7 +7,7 @@
 #include <kinetis_flexcan.h>
 #include <WireKinetis.h>
 #include <Wire.h>
-#include <Adafruit_MCP9808.cpp>
+#include "Adafruit_MCP9808.h"
 #include <InternalTemperature.h>
 #include <array>
 #include <string>
@@ -32,6 +32,8 @@ using std::string;
 #include <TimeLib.h>
 #include <DS1307RTC.h> 
 
+
+bool abortHaltFlag; //creates halt flag
 
 ///// NODE DECLARATION!!!!! /////
 int nodeID; //engine node = 2, prop node = 3
@@ -116,7 +118,7 @@ A9 - Lox High Press PT */
 
 
 ///// Temp Sensor for TC Cold Junction /////
-Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
+//Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 int roundedtemp;
 
 
@@ -248,7 +250,7 @@ void setup() {
 Wire.setSDA(38);
 Wire.setSCL(37);
 
-if(!tempsensor.begin(0x19))
+/* if(!tempsensor.begin(0x19))
 {
   Serial.println("Temp Sensor did not initialize.");
 }
@@ -271,7 +273,7 @@ tempsensor.setResolution(2);
   //  1    0.25°C      65 ms
   //  2    0.125°C     130 ms
   //  3    0.0625°C    250 ms
-}
+} */
 
   timer2 = 0;
 
@@ -303,15 +305,19 @@ void loop()
   }
 
   // -----Process Commands Here-----
-  commandExecute(currentState, currentCommand, valveArray, pyroArray);
-  
+  commandExecute(currentState, currentCommand, valveArray, pyroArray, abortHaltFlag);
+    
+
   ////// ABORT FUNCTIONALITY!!!///// This is what overrides main valve and igniter processes! /////
   ////// DO NOT MOVE BEFORE "commandExecute" or after "valveTasks"/"pyroTasks"!!! /////
-  haltFlagCheck(valveArray, pyroArray, haltFlag);
+  haltFlagCheck(abortHaltFlag, valveArray, pyroArray);
 
   // -----Advance needed valve and pyro tasks-----
   valveTasks(valveArray, nodeID);
   pyroTasks(pyroArray, nodeID);
+
+/*     Serial.print("abortHaltFlag: ");
+    Serial.println(abortHaltFlag); */
 
 
   // -----Update State on EEPROM -----
@@ -319,18 +325,18 @@ void loop()
   EEPROM.update(stateAddress, static_cast<uint8_t>(currentState)); // Never use .write()
   sei(); // reenables interrupts after write is completed
 
-    // Get and send valve status - NEEDS UPDATED FOR MY STATE FORMATS
+/*     // Get and send valve status - NEEDS UPDATED FOR MY STATE FORMATS
   std::bitset<BITFLAG_SIZE> valveFlags{setValveFlags(valveArray)};
   std::array<uint8_t, 2> flagArray{};
   flagArray.at(0) = (valveFlags >> 8).to_ulong() & 0xff;
-  flagArray.at(1) = valveFlags.to_ulong() & 0xff;
+  flagArray.at(1) = valveFlags.to_ulong() & 0xff; */
 
 
 
 
 
   ///// Temp Sensor for TC Cold Junction Only/////
-  if (sinceReadRTD >= 130) {       //sets the if loop to only run if at least the number given milliseconds have passed
+  /* if (sinceReadRTD >= 130) {       //sets the if loop to only run if at least the number given milliseconds have passed
     tempsensor.shutdown_wake(0);
     //float c = tempsensor.readTempC();
     int rawtemp = tempsensor.read16(MCP9808_REG_AMBIENT_TEMP);    //attempting to read raw temp bits to send, not preconverted to float
@@ -351,19 +357,19 @@ void loop()
     message.len = 2;  // number of bytes the message length uses
     message.id = 666 + (25 + nodeID); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end.
     Can0.write(message); //message send
-    message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
+    //message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
   sinceReadRTD = 0; //resets timer to zero each time the ADC is read
   }
-
+ */
   if (sinceRead1 >= 1000) {       //sets the if loop to only run if at least the number given milliseconds have passed
     for (int i = 0; i < PINS; i++)
       if (input_enable1[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" A");
+/*             Serial.print(" A");
             Serial.print(i);
             Serial.print(": ");
             Serial.print(value);
-            Serial.println();
+            Serial.println(); */
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
             message.buf[0] = (value >> 8) & 0xff;
@@ -380,11 +386,11 @@ void loop()
     for (int i = 0; i < PINS; i++)
       if (input_enable10[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" A");
+/*             Serial.print(" A");
             Serial.print(i);
             Serial.print(": ");
             Serial.print(value);
-            Serial.println();
+            Serial.println(); */
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
             message.buf[0] = (value >> 8) & 0xff;
@@ -395,14 +401,14 @@ void loop()
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
     }
-    for (int i = 0; i < PINS_DIFF; i++) //TC READS
+    for (int i = 0; i < PINS_DIFF/2; i++) //TC READS
       if (input_enablediff[i] == true) {
         {value = adc->analogReadDifferential(adc_pins_diff[0][i], adc_pins_diff[1][i]);
-            Serial.print(" A");
+/*             Serial.print(" A");
             Serial.print(i);
             Serial.print(": ");
             Serial.print(value);
-            Serial.println();
+            Serial.println(); */
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
             message.buf[0] = (value >> 8) & 0xff;
@@ -416,16 +422,16 @@ void loop()
 
   MCUtempraw = InternalTemperature.readTemperatureC();
   //Serial.print(InternalTemperature.readTemperatureC(), 1);
-  Serial.print(MCUtempraw, 1);
+/*   Serial.print(MCUtempraw, 1);
   Serial.println();
   message.buf[0] = (MCUtempraw >> 8) & 0xff;
   message.buf[1] = MCUtempraw & 0xff;
   message.len = 2;  // number of bytes the message length uses
   message.id = (MCUtempCANID * nodeID); // 11 bit ID, any value 0-2047, match ID for sensor on RPi receive end. Using ADC ID here.
-  Can0.write(message); //message send
+  Can0.write(message); //message send */
 
   ///// SENDING VALVE STATES ///// - inside the 10 Hz sensor timer if section
-  CANwrite(Can0, flagArray, 0);   // need IDs for different returns
+  /* CANwrite(Can0, flagArray, 0);   // need IDs for different returns */
 
   sinceRead10 = 0; //resets timer to zero each time the ADC is read
   }
@@ -434,11 +440,11 @@ void loop()
     for (int i = 0; i < PINS; i++)
       if (input_enable100[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" A");
+            /* Serial.print(" A");
             Serial.print(i);
             Serial.print(": ");
             Serial.print(value);
-            Serial.println();
+            Serial.println(); */
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
             message.buf[0] = (value >> 8) & 0xff;
@@ -459,11 +465,11 @@ void loop()
     for (int i = 0; i < PINS; i++)
       if (input_enable1000[i] == true) {
         {value = adc->analogRead(adc_pins[i]);
-            Serial.print(" A");
+/*             Serial.print(" A");
             Serial.print(i);
             Serial.print(": ");
             Serial.print(value);
-            Serial.println();
+            Serial.println(); */
             // CAN buffers refer to each byte in a CAN frame based on how the CAN library works, up to 8. 
             // Below we take a 16 bit ADC read and split it to buffer 0 and buffer 1
             message.buf[0] = (value >> 8) & 0xff;
@@ -476,5 +482,5 @@ void loop()
     }
   sinceRead1000 = 0; //resets timer to zero each time the ADC is read
   }
-
+startup = false;
 }

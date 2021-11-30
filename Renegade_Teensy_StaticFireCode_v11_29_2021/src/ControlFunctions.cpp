@@ -40,9 +40,9 @@ void startupStateCheck(const State& currentState, Command& currentCommand)
     }
 }
 
-void haltFlagCheck(bool haltFlat, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray)
+void haltFlagCheck(bool & haltFlag, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray)
 {
-    if (haltFlag)
+    if(haltFlag)
     {
         valveArray.at(8)->setState(ValveState::CloseCommanded);
         valveArray.at(9)->setState(ValveState::CloseCommanded);
@@ -55,7 +55,7 @@ void haltFlagCheck(bool haltFlat, const std::array<Valve*, NUM_VALVES>& valveArr
 }
 
 
-void commandExecute(State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray)
+void commandExecute(State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, bool & haltFlag)
 {
     switch (currentCommand)
     {
@@ -82,6 +82,7 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             digitalWrite(pin::LoxVentSafe, 0);
             digitalWrite(pin::MainValvesSafe, 0);
             currentState = State::passive;
+            haltFlag = false;
             break;
         case command_test:
             currentState = State::test;
@@ -134,6 +135,7 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             digitalWrite(pin::LoxVentSafe, 1);
             digitalWrite(pin::MainValvesSafe, 0);
             currentState = State::HiPressArm;
+            }
             break;
         case command_HiPressPressurized:
             if(currentState == State::HiPressArm || currentState == State::TankPressArm) //added second conditional to allow entry backwards in a "disarm" state change

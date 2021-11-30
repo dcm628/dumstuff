@@ -1,4 +1,6 @@
 //Dan's thermocouple header, good luck
+#ifndef thermocoupleT_K_H
+#define thermocoupleT_K_H
 
 #include <string>
 #include <list>
@@ -34,3 +36,5 @@ for (size_t i = 0; i < 671; i++)
     TTypeMicroVtoC[TTypeinputarrayV[i]] = TTypeCtoMicroV[i];
 }
 }
+
+#endif

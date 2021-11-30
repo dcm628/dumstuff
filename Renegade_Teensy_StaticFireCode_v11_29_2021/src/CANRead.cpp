@@ -24,16 +24,22 @@ bool CANread(FlexCAN& CANbus, Command& CurrentCommand)
     {
         if(CANbus.read(msg))                                                                // read occurs inside if statement
         {
-            NewMessage = true;                                                              // set new message flag to true if message recieved and read
-
-            // add CAN messages to internal buffer
-            for(uint8_t index{0}; index < msg.len; ++index)                                 // restrict to length of message
+            if(msg.id == 0) //id = 0 is the only command frame ID to be used for state control
             {
-                if(msg.buf[index] < command_SIZE)                                           // this checks if the message at that location in the buffer could be a valid command
+                NewMessage = true;                                                              // set new message flag to true if message recieved and read
+
+                // add CAN messages to internal buffer
+                for(uint8_t index{0}; index < msg.len; ++index)                                 // restrict to length of message
                 {
-                    // convert message to a Command type and save it to the buffer
-                    CommandBuffer.at(CommandBufferIndex) = static_cast<Command>(msg.buf[index]);
-                    ++CommandBufferIndex;                                                   // increment buffer index
+                
+                
+                    if(msg.buf[index] < command_SIZE)                                           // this checks if the message at that location in the buffer could be a valid command
+                    {
+                        // convert message to a Command type and save it to the buffer
+                        CommandBuffer.at(CommandBufferIndex) = static_cast<Command>(msg.buf[index]);
+                        ++CommandBufferIndex;                                                   // increment buffer index
+                    }
+                
                 }
             }
 
