@@ -69,11 +69,15 @@ void Valve::stateOperations()
                 analogWrite(pin, fullDuty);
                 timer = 0;
                 state = ValveState::OpenProcess;
+                Serial.print("NC OpenCommanded: ");
+                Serial.println(valveID);
                 break;
             case NormalOpen:
                 analogWrite(pin, 0);
                 timer = 0;
                 state = ValveState::Open;
+                Serial.print("NO OpenCommanded: ");
+                Serial.println(valveID);                
                 break;
             default:
                 break;

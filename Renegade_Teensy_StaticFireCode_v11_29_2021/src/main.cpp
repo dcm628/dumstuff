@@ -36,7 +36,7 @@ using std::string;
 bool abortHaltFlag; //creates halt flag
 
 ///// NODE DECLARATION!!!!! /////
-int nodeID; //engine node = 2, prop node = 3
+uint8_t nodeID; //engine node = 2, prop node = 3
 
 ///// ADC /////
 ADC* adc = new ADC();
@@ -276,7 +276,7 @@ tempsensor.setResolution(2);
 } */
 
   timer2 = 0;
-
+HiPress.setState(ValveState::OpenCommanded);
 }
 
 void loop() 

@@ -19,34 +19,32 @@
     // This function takes the array of pointers that point to the valve objects, and then calls the .stateOperations() method for each valve
     // Make sure valveArray is an array of pointers, as defined in ValveDefinitions.h
 template <typename T, std::size_t size>
-void valveTasks(const std::array<T, size>& valveArray, int& nodeID)
+void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeID)
 {
     // iterate through valve array and run the stateOperations method
     for(auto valve : valveArray)
     {
-        //Valve valve->getValveNodeID();
     
-        //if (valve->valveNodeID == nodeID)
-            //{
+        if (valve->getValveNodeID() == nodeID)
+            {
             valve->stateOperations();
             //Serial.print("LoopRan");
-            //}
+            }
     }
 }
 
 template <typename T, std::size_t size>
-void pyroTasks(const std::array<T, size>& pyroArray, int& nodeID)
+void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
 {
     // iterate through valve array and run the stateOperations method
     for(auto pyro : pyroArray)
     {
-        //Pyro pyroNodeID{pyro->getPyroNodeID()};
         
-        //if (pyro->pyroNodeID == nodeID)
-            //{
+    if (pyro->getPyroNodeID() == nodeID)
+            {
             pyro->stateOperations();
             //Serial.print("LoopRan");
-            //}
+            }
     }
 }
 
