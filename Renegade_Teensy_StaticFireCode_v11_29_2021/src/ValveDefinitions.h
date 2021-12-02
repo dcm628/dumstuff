@@ -6,6 +6,7 @@
 
 // Define number of valves here
 #define NUM_VALVES 10
+#define NUM_VALVEENABLE 6
 
 // Declare all Valve Objects here using ValveClass, and add them to the valveArray
 // On Engine Node
@@ -26,9 +27,16 @@ Valve LoxVent{18, 3, NormalOpen, 2, 500000, 9, 166};
 
 std::array<Valve*, NUM_VALVES> valveArray{&HiPress, &HiPressVent, &LoxVent, &LoxDomeReg, &LoxDomeRegVent, &FuelVent, &FuelDomeReg, &FuelDomeRegVent, &FuelMV, &LoxMV};
 
+// Declare all ValveEnable Objects here
+// On Engine Node
+ValveEnable HiPressHiVentSafe{24, 2};
+ValveEnable MainValvesSafe{25, 2};
+// On Prop Node
+ValveEnable FuelVentSafe{24, 3};
+ValveEnable LoxDomeRegVentSafe{25, 3};
+ValveEnable FuelDomeRegVentSafe{26, 3};
+ValveEnable LoxVentSafe{27, 3};
 
-
-
-
+std::array<ValveEnable*, NUM_VALVEENABLE> valveEnableArray{&HiPressHiVentSafe, &MainValvesSafe, &FuelVentSafe, &LoxDomeRegVentSafe, &FuelDomeRegVentSafe, &LoxVentSafe};
 
 #endif

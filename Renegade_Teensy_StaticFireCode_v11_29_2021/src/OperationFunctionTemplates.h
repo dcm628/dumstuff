@@ -34,6 +34,24 @@ void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeID)
 }
 
 template <typename T, std::size_t size>
+void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& nodeID)
+{
+    // iterate through valve array and run the stateOperations method
+    for(auto valveEnable : valveEnableArray)
+    {
+        if (valveEnable->getValveEnableNodeID() == nodeID)
+/*             Serial.println("valve node ID");
+            Serial.println(valveEnable->getValveEnableNodeID());
+            Serial.print("nodeID");
+            Serial.print(nodeID); */
+            {
+            valveEnable->stateOperations();
+            //Serial.print("LoopRan");
+            }        
+    }
+}
+
+template <typename T, std::size_t size>
 void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
 {
     // iterate through valve array and run the stateOperations method
@@ -48,17 +66,6 @@ void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
     }
 }
 
-/* //Alternate attempt at valveTasks and pyroTasks without templates
-void valveTasks()
-{
-
-}
-
-
-void pyroTasks()
-{
-    
-} */
 
 // CALL THIS FUNCTION ONCE IN SETUP, THIS SETS THE VALVE PINMODES
     // make sure to pass this function valveArray, as defined in ValveDefinitions.h
@@ -69,6 +76,17 @@ void valveSetUp(const std::array<T, size>& valveArray)
     for(auto valve : valveArray)
     {
         valve->begin();
+        //Serial.print("LoopRan");
+    }
+}
+
+template <typename T, std::size_t size>
+void valveEnableSetUp(const std::array<T, size>& valveEnableArray)
+{
+    // iterate through valve array and run the stateOperations method
+    for(auto valveEnable : valveEnableArray)
+    {
+        valveEnable->begin();
         //Serial.print("LoopRan");
     }
 }

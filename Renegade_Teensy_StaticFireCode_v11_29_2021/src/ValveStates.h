@@ -16,6 +16,11 @@ enum class ValveState
     ValveState_SIZE,    // 7
 };
 
-
+enum class ValveEnableState
+{
+    Off,                    // 0
+    On,                     // 1
+    ValveEnableState_Size,  // 2
+};
 
 #endif

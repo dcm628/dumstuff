@@ -163,12 +163,18 @@ void setup() {
     {
     pinMode(pin::HiPressHiVentSafe, OUTPUT);
     pinMode(pin::MainValvesSafe, OUTPUT);
+    digitalWrite(24, 1);
+    digitalWrite(25, 1);
     } else if (nodeID == 3)  //Prop Node
     {
     pinMode(pin::LoxDomeRegVentSafe, OUTPUT);
     pinMode(pin::FuelDomeRegVentSafe, OUTPUT);
     pinMode(pin::LoxVentSafe, OUTPUT);
     pinMode(pin::FuelVentSafe, OUTPUT);
+    digitalWrite(25, 1);
+    digitalWrite(26, 1);
+    digitalWrite(27, 1);
+    digitalWrite(24, 1);
     }
 
 
@@ -180,7 +186,10 @@ void setup() {
 
 
   // -----Run Valve Setup-----
-  valveSetUp(valveArray);  
+  valveSetUp(valveArray);
+
+  // -----Run ValveEnable Setup-----
+  valveEnableSetUp(valveEnableArray);
 
   // -----Run Valve Setup-----
   pyroSetUp(pyroArray);
@@ -276,7 +285,7 @@ tempsensor.setResolution(2);
 } */
 
   timer2 = 0;
-HiPress.setState(ValveState::OpenCommanded);
+
 }
 
 void loop() 
@@ -286,7 +295,7 @@ void loop()
   Serial.println(node); */
 
   //LED status indicator to show program is running
-  if (sinceLED >= 50) {       //sets the if loop to only run if at least the number given milliseconds have passed
+  if (sinceLED >= 100) {       //sets the if loop to only run if at least the number given milliseconds have passed
     if (ledstate == true)
     {
       digitalWrite(pin::led, 0);
@@ -305,15 +314,16 @@ void loop()
   }
 
   // -----Process Commands Here-----
-  commandExecute(currentState, currentCommand, valveArray, pyroArray, abortHaltFlag);
+  commandExecute(currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag);
     
 
   ////// ABORT FUNCTIONALITY!!!///// This is what overrides main valve and igniter processes! /////
   ////// DO NOT MOVE BEFORE "commandExecute" or after "valveTasks"/"pyroTasks"!!! /////
-  haltFlagCheck(abortHaltFlag, valveArray, pyroArray);
+  haltFlagCheck(abortHaltFlag, valveArray, pyroArray, valveEnableArray);
 
   // -----Advance needed valve and pyro tasks-----
   valveTasks(valveArray, nodeID);
+  valveEnableTasks(valveEnableArray, nodeID);
   pyroTasks(pyroArray, nodeID);
 
 /*     Serial.print("abortHaltFlag: ");
@@ -483,4 +493,10 @@ void loop()
   sinceRead1000 = 0; //resets timer to zero each time the ADC is read
   }
 startup = false;
+
+digitalWrite(25, 1);
+digitalWrite(26, 1);
+digitalWrite(27, 1);
+digitalWrite(24, 1);
+
 }

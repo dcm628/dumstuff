@@ -23,10 +23,22 @@ Valve::Valve(int setValveID, int setValveNodeID, ValveType setValveType, int set
     
 }
 
+ValveEnable::ValveEnable(int setValveEnablePin, int setValveEnableNodeID)
+                : valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}
+{
+    
+}
+
 void Valve::begin()
 {
     pinMode(pin, OUTPUT);
     analogWrite(pin, 0);
+}
+
+void ValveEnable::begin()
+{
+    pinMode(valveEnablePin, OUTPUT);
+    digitalWrite(valveEnablePin, 0);
 }
 
 void Valve::resetTimer()
@@ -69,15 +81,15 @@ void Valve::stateOperations()
                 analogWrite(pin, fullDuty);
                 timer = 0;
                 state = ValveState::OpenProcess;
-                Serial.print("NC OpenCommanded: ");
-                Serial.println(valveID);
+                //Serial.print("NC OpenCommanded: ");
+                //Serial.println(valveID);
                 break;
             case NormalOpen:
                 analogWrite(pin, 0);
                 timer = 0;
                 state = ValveState::Open;
-                Serial.print("NO OpenCommanded: ");
-                Serial.println(valveID);                
+                //Serial.print("NO OpenCommanded: ");
+                //Serial.println(valveID);                
                 break;
             default:
                 break;
@@ -133,5 +145,24 @@ void Valve::stateOperations()
     // All other states require no action
     default:
         break;
+    }
+}
+
+void ValveEnable::stateOperations()
+{
+    switch (state)
+    {
+    
+        case ValveEnableState::On:
+            {
+            digitalWrite(valveEnablePin, 1);
+            }
+        case ValveEnableState::Off:
+            {
+            digitalWrite(valveEnablePin, 0);
+            }
+    default:
+        break;
+    
     }
 }
