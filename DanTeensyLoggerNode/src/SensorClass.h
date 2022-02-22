@@ -40,7 +40,7 @@ class SENSOR
   private:
     const string sens_name;           //your own name for sensor to reference it
     const SensorType senstype;        //sensor type from pt,tc,load_cell, or any others added (update options here as they are added for reference) (Changed this to enum)
-    const bool diff_read;             //boolean for if sensor is a differential read
+    const bool diff_read{};             //boolean for if sensor is a differential read
     const int ADCinput;               //the input that will be read for this sensor that will get used in the ADC read main loop
     const int sens_sample_rate_high;  //the sample rate this given sensor will be read at in high speed mode
     const int sens_sample_rate_low;   //the sample rate this given sensor will be read at in low speed mode
