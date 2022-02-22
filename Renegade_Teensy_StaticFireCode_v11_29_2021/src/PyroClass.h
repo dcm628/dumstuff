@@ -16,8 +16,8 @@ enum PyroType
 class Pyro
 {
     private:
-        const int pyroID;
-        const int pyroNodeID;
+        const uint32_t pyroID;
+        const uint32_t pyroNodeID;
         const int firePin;
         //const int shuntPin;
         //const int contCheckPin;
@@ -31,7 +31,7 @@ class Pyro
     public:
     
     // constructor, define the valve ID here, and the pin that controls the valve, setFireDelay is only parameter that can be left blank
-        Pyro(int setPyroID, int setPyroNodeID, PyroType setPyroType, int setFirePin, uint32_t setFireDelay, uint32_t setLiveOutTime); 
+        Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, int setFirePin, uint32_t setFireDelay, uint32_t setLiveOutTime); 
     // Alternate constructor with future full implementation, needs the clonedpyro features still
     //    Pyro(int setPyroID, int setPyroNodeID, int setFirePin, int setShuntPin, int setContPin, uint32_t setFireDelay = 0);
 

@@ -19,10 +19,10 @@ class Valve
 {
 
     private:
-        const int valveID;                          // Valve ID number 
-        const int valveNodeID;                      // NodeID the valve is controlled by
+        const uint32_t valveID;                          // Valve ID number 
+        const uint32_t valveNodeID;                      // NodeID the valve is controlled by
         const ValveType valveType;                  // sets the valve type, either normal closed or normal open
-        const int pin;                              // Valve PWM pin for actuation
+        const uint8_t pin;                              // Valve PWM pin for actuation
         const uint32_t fullDutyTime;                // Time PWM needs to be at full duty for actuation, in MICROS
         const uint32_t fireDelay;                   // Time to wait until actuation after fire command given, in MICROS
         ValveState state;                           // Tracks the valve state
@@ -34,7 +34,7 @@ class Valve
     public:
     
     // constructor, define the valve ID here, and the pin that controls the valve, setFireDelay is only parameter that can be left blank
-        Valve(int setValveID, int setValveNodeID, ValveType setValveType, int setPin, uint32_t setFullDutyTime, uint32_t setFireDelay = 0 , u_int8_t setHoldDuty = 64); 
+        Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, uint32_t setFireDelay = 0 , u_int8_t setHoldDuty = 64); 
 
     // a start up method, to set pins from within setup()
         void begin();
@@ -45,8 +45,9 @@ class Valve
         uint32_t getValveID(){return valveID;}
         uint32_t getValveNodeID(){return valveNodeID;}
         ValveType getValveType(){return valveType;}
-        uint32_t getPin(){return pin;}
+        uint8_t getPin(){return pin;}
         uint32_t getFullDutyTime(){return fullDutyTime;}
+        uint8_t getHoldDuty(){return holdDuty;}
         uint32_t getFireDelay(){return fireDelay;}
         ValveState getState(){return state;}
         uint32_t getTimer(){return timer;}
@@ -70,14 +71,14 @@ class Valve
 class ValveEnable
 {
     private:
-        const int valveEnableNodeID;
-        const int valveEnablePin;
+        const uint32_t valveEnableNodeID;
+        const uint32_t valveEnablePin;
         ValveEnableState state;
 
     public:
         
     // constructor
-        ValveEnable (int setValveEnableNodeID, int setValveEnablePin);
+        ValveEnable (uint32_t setValveEnableNodeID, uint32_t setValveEnablePin);
 
 
     // a start up method, to set pins from within setup()

@@ -18,6 +18,7 @@ using std::string;
 #include "ValveDefinitions.h"
 #include "CANRead.h"
 #include "CANWrite.h"
+#include "CANReports.h"
 #include "ControlCommands.h"
 #include "OperationFunctionTemplates.h"
 #include "SensorClass.h"
@@ -143,38 +144,38 @@ void setup() {
     pinMode(pin::NodeAddress0, INPUT);
     pinMode(pin::NodeAddress1, INPUT);
     pinMode(pin::NodeAddress2, INPUT);
-    delay(1000);
-    if (digitalRead(pin::NodeAddress2) == 1) {
+    delay(250);
+/*     if (digitalRead(pin::NodeAddress2) == 1) {
     nodeID = 2;
   } else {
     nodeID = 3;
-  }
-  
+  } */
+  nodeID = 2;
   startup = true;
 
   // ----- Hardware Abort Pin Setup ----- NOT CURRENTLY IN USE
-  pinMode(pin::reset, OUTPUT);
+/*   pinMode(pin::reset, OUTPUT);
   digitalWrite(pin::reset, 1);
   pinMode(pin::abort, INPUT_PULLDOWN);
-  attachInterrupt(digitalPinToInterrupt(pin::abort), abortReset, RISING); 
+  attachInterrupt(digitalPinToInterrupt(pin::abort), abortReset, RISING);  */
 
   // ----- Safety Pin Setup -----
   if (nodeID == 2) //Engine Node
     {
     pinMode(pin::HiPressHiVentSafe, OUTPUT);
     pinMode(pin::MainValvesSafe, OUTPUT);
-    digitalWrite(24, 1);
-    digitalWrite(25, 1);
+    //digitalWrite(24, 1);
+    //digitalWrite(25, 1);
     } else if (nodeID == 3)  //Prop Node
     {
     pinMode(pin::LoxDomeRegVentSafe, OUTPUT);
     pinMode(pin::FuelDomeRegVentSafe, OUTPUT);
     pinMode(pin::LoxVentSafe, OUTPUT);
     pinMode(pin::FuelVentSafe, OUTPUT);
-    digitalWrite(25, 1);
-    digitalWrite(26, 1);
-    digitalWrite(27, 1);
-    digitalWrite(24, 1);
+    //digitalWrite(25, 1);
+    //digitalWrite(26, 1);
+    //digitalWrite(27, 1);
+    //digitalWrite(24, 1);
     }
 
 
@@ -444,6 +445,10 @@ void loop()
   /* CANwrite(Can0, flagArray, 0);   // need IDs for different returns */
 
   sinceRead10 = 0; //resets timer to zero each time the ADC is read
+  
+  CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
+
+  
   }
 
     if (sinceRead100 >= 10) {       //sets the if loop to only run if at least the number given milliseconds have passed

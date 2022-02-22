@@ -48,7 +48,7 @@ void haltFlagCheck(bool & haltFlag, const std::array<Valve*, NUM_VALVES>& valveA
         valveArray.at(9)->setState(ValveState::CloseCommanded);
         pyroArray.at(0)->setState(PyroState::OffCommanded);
         pyroArray.at(1)->setState(PyroState::OffCommanded);
-        //valveEnableArray.at(0)->setState(ValveEnableState::Off);
+        valveEnableArray.at(0)->setState(ValveEnableState::Off);
     }
     
 
@@ -75,23 +75,23 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);
-/*             valveEnableArray.at(0)->setState(ValveEnableState::Off);
+            valveEnableArray.at(0)->setState(ValveEnableState::Off);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::Off);
-            valveEnableArray.at(5)->setState(ValveEnableState::Off); */
+            valveEnableArray.at(5)->setState(ValveEnableState::Off);
             currentState = State::passive;
             haltFlag = false;
             break;
         case command_test:
             currentState = State::test;
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::On);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::On);  */                       
+            valveEnableArray.at(5)->setState(ValveEnableState::On);                        
             break;
         case command_abort:
             haltFlag = true;
@@ -110,12 +110,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);            
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::On);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::Off);  */           
+            valveEnableArray.at(5)->setState(ValveEnableState::Off);            
             currentState = State::vent;
             break;
 // Fire Sequence commands will only be executed from the proper state
@@ -134,12 +134,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);            
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::Off); */
+            valveEnableArray.at(5)->setState(ValveEnableState::Off);
             currentState = State::HiPressArm;
             }
             break;
@@ -158,12 +158,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);            
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::Off); */
+            valveEnableArray.at(5)->setState(ValveEnableState::Off);
             currentState = State::HiPressPressurized;
             }
             break;
@@ -182,12 +182,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);            
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::Off); */
+            valveEnableArray.at(5)->setState(ValveEnableState::Off);
             currentState = State::TankPressArm;
             }
             break;
@@ -206,12 +206,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);            
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::Off); */
+            valveEnableArray.at(5)->setState(ValveEnableState::Off);
             currentState = State::TankPressPressurized;
             }
             break;
@@ -230,12 +230,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::CloseCommanded);
             pyroArray.at(0)->setState(PyroState::OffCommanded);
             pyroArray.at(1)->setState(PyroState::OffCommanded);         
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::On); */            
+            valveEnableArray.at(5)->setState(ValveEnableState::On);
             currentState = State::fireArmed;
             }
             break;
@@ -254,12 +254,12 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveArray.at(9)->setState(ValveState::FireCommanded);
             pyroArray.at(0)->setState(PyroState::FireCommanded);
             pyroArray.at(1)->setState(PyroState::FireCommanded);
-/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
-            valveEnableArray.at(5)->setState(ValveEnableState::On); */
+            valveEnableArray.at(5)->setState(ValveEnableState::On);
             currentState = State::fire;
             }
             break;

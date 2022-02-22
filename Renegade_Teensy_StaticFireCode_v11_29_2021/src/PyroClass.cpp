@@ -4,7 +4,7 @@
 
 
 
-Pyro::Pyro(int setPyroID, int setPyroNodeID, PyroType setPyroType, int setFirePin, uint32_t setFireDelay, uint32_t setLiveOutTime)
+Pyro::Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, int setFirePin, uint32_t setFireDelay, uint32_t setLiveOutTime)
                 : pyroID{setPyroID}, pyroNodeID{setPyroNodeID}, pyroType{setPyroType}, firePin{setFirePin}, fireDelay{setFireDelay}, liveOutTime{setLiveOutTime}
 {
     switch (pyroType)

@@ -102,7 +102,7 @@ void pyroSetUp(const std::array<T, size>& pyroArray)
     }
 }
 
-// This function outputs a bitset contianing flags about the valve status, to be sent back to the console via CAN
+/* // This function outputs a bitset contianing flags about the valve status, to be sent back to the console via CAN
 template <typename T, std::size_t size>
 std::bitset<BITFLAG_SIZE> setValveFlags(const std::array<T, size>& valveArray)
 {
@@ -125,12 +125,13 @@ std::bitset<BITFLAG_SIZE> setValveFlags(const std::array<T, size>& valveArray)
     }
     
     return valveStatus;
-}
+} */
 
 // this runs the begin method for each sensor
 template <std::size_t size>
-void sensorSetUp(const std::array<SENSOR*, size>& sensorArray)
+void sensorSetUp(const std::array<SENSOR*, size>& sensorArray, uint8_t& nodeID)
 {
+    
     for(auto sensor : sensorArray)
     {
         sensor->begin();
@@ -139,12 +140,15 @@ void sensorSetUp(const std::array<SENSOR*, size>& sensorArray)
 
 // This function reads all the sensor values
 template <std::size_t size>
-void readSensors(const std::array<SENSOR*, size>& sensorArray, ADC* adc)
+void readSensors(const std::array<SENSOR*, size>& sensorArray, ADC* adc, uint8_t& nodeID)
 {
-    for(auto sensor : sensorArray)
+    if (sensor->getSensorNodeID() == nodeID)
     {
-        sensor->read(adc);
-    }
+        for(auto sensor : sensorArray)
+        {
+            sensor->read(adc);
+        }
+    }    
 }
 
 

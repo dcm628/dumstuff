@@ -4,7 +4,7 @@
 
 
 
-Valve::Valve(int setValveID, int setValveNodeID, ValveType setValveType, int setPin, uint32_t setFullDutyTime, uint32_t setFireDelay, uint8_t setHoldDuty)
+Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, uint32_t setFireDelay, uint8_t setHoldDuty)
                 : valveID{setValveID}, valveNodeID{setValveNodeID}, valveType{setValveType}, pin{setPin}, fullDutyTime{setFullDutyTime}, fireDelay{setFireDelay}, holdDuty{setHoldDuty}
 {
     switch (valveType)
@@ -23,7 +23,7 @@ Valve::Valve(int setValveID, int setValveNodeID, ValveType setValveType, int set
     
 }
 
-ValveEnable::ValveEnable(int setValveEnablePin, int setValveEnableNodeID)
+ValveEnable::ValveEnable(uint32_t setValveEnablePin, uint32_t setValveEnableNodeID)
                 : valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}
 {
     
