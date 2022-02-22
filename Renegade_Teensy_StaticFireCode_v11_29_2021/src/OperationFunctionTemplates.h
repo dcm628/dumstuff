@@ -142,7 +142,7 @@ void sensorSetUp(const std::array<SENSOR*, size>& sensorArray, uint8_t& nodeID)
 template <std::size_t size>
 void readSensors(const std::array<SENSOR*, size>& sensorArray, ADC* adc, uint8_t& nodeID)
 {
-    if (sensor->getSensorNodeID() == nodeID)
+    if (sensorArray[0]->getSensorNodeID() == nodeID)
     {
         for(auto sensor : sensorArray)
         {

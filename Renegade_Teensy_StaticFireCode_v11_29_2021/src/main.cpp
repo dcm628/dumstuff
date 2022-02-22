@@ -445,11 +445,10 @@ void loop()
   /* CANwrite(Can0, flagArray, 0);   // need IDs for different returns */
 
   sinceRead10 = 0; //resets timer to zero each time the ADC is read
-  
   CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
 
-  
   }
+
 
     if (sinceRead100 >= 10) {       //sets the if loop to only run if at least the number given milliseconds have passed
     for (int i = 0; i < PINS; i++)

@@ -17,8 +17,17 @@ enum SensorType
 {
   pt,
   loadcell1000,
+  ChamberPT1,
+  FuelTankPT,
+  LOXTankPT,
+  FuelRegPT,
+  LOXRegPT,
+  FuelLinePT,
+  LOXLinePT,
+  PneumaticPT,
+  ThrustMountLoadCell1,
   tcktype,
-  rtd,
+  rtd
 };
 
 // enum for holding ADC input types
@@ -46,7 +55,8 @@ class SENSOR
 
   public:
     //SENSOR(uint32_t setSensorID, uint32_t setSensorNodeID, string setSens_Name, SensorType setSensType, ADCType setadcType, uint32_t setADCinput, uint32_t setSens_Sample_rate, uint8_t setBitDepth);
-    SENSOR(uint32_t setSensorID, uint32_t setSensorNodeID, SensorType setSensType, ADCType setadcType, uint32_t setADCinput, uint32_t setSens_Sample_rate, uint8_t setBitDepth);
+    SENSOR(uint32_t setSensorID, uint32_t setSensorNodeID, SensorType setSensType, ADCType setadcType,
+           uint32_t setADCinput, uint32_t setSens_Sample_rate, uint8_t setBitDepth, int i);
 
     // Access functions defined in place
     uint32_t getSensorID(){return sensorID;}
