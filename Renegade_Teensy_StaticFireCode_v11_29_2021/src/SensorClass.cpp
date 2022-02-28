@@ -10,8 +10,9 @@ using std::string;
 //SENSOR::SENSOR(uint32_t setSensorID, uint32_t setSensorNodeID, string setSens_Name, SensorType setSensType, ADCType setADCType, uint32_t setADCinput, uint32_t setSens_Sample_rate, uint8_t setBitDepth)
 //                : sensorID{setSensorID}, sensorNodeID{setSensorNodeID}, sens_name{setSens_Name}, senstype{setSensType}, adcType{setADCType}, ADCinput{setADCinput}, sens_sample_rate{setSens_Sample_rate}, bitDepth{setBitDepth}
 
-SENSOR::SENSOR(uint32_t setSensorID, uint32_t setSensorNodeID, SensorType setSensType, ADCType setADCType, uint32_t setADCinput, uint32_t setSens_Sample_rate, uint8_t setBitDepth)
-                : sensorID{setSensorID}, sensorNodeID{setSensorNodeID}, senstype{setSensType}, adcType{setADCType}, ADCinput{setADCinput}, sens_sample_rate{setSens_Sample_rate}, bitDepth{setBitDepth}
+SENSOR::SENSOR(uint32_t setSensorID, uint32_t setSensorNodeID, SensorType setSensType, ADCType setadcType,
+               uint32_t setADCinput, uint32_t setSens_Sample_rate, uint8_t setBitDepth, int i)
+                : sensorID{setSensorID}, sensorNodeID{setSensorNodeID}, senstype{setSensType}, adcType{setadcType}, ADCinput{setADCinput}, sens_sample_rate{setSens_Sample_rate}, bitDepth{setBitDepth}
 
 
 {

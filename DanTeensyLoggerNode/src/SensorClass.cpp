@@ -26,4 +26,3 @@ void SENSOR::read(ADC* adc)
 {
     currentRawValue = adc->analogRead(ADCinput);
 }
-
