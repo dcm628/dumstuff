@@ -86,15 +86,16 @@ bool startup{true}; // is this the first loop?
 uint32_t loopCount {0};// for debugging
 
 // Set the global command, and global state
-Command currentCommand{command_NOCOMMAND};
+Command currentCommand{command_NOCOMMAND}; 
 State currentState{State::passive};
+State priorState;
 
 // Set EEPROM address for storing states
 uint8_t stateAddress{0};
 
 // 2 timers to not print too much
 //elapsedMillis sensorTimer;
-elapsedMillis timer2;
+//elapsedMillis timer2;
 
 
 //Sensor --- ADC channel
@@ -150,7 +151,7 @@ void setup() {
   } else {
     nodeID = 3;
   } */
-  nodeID = 2;
+  nodeID = 3;
   startup = true;
 
   // ----- Hardware Abort Pin Setup ----- NOT CURRENTLY IN USE
@@ -221,7 +222,33 @@ void setup() {
     input_enable100[8] = 1;         //Fuel High Press PT
     input_enable100[9] = 1;         //Lox High Press PT
     }
+/* 
+    if (nodeID == 2) //Engine Node ADC pins to read sensors on
+    {
+    input_enablediff[0] = 0;        //TC
+    input_enablediff[1] = 0;        //TC
+    input_enable100[0] = 0;         //LC1
+    input_enable100[1] = 0;         //LC2
+    input_enable100[2] = 0;         //LC2
+    input_enable1000[6] = 0;        //Chamber1 PT
+    input_enable1000[5] = 0;        //Chamber2 PT
+    input_enable100[7] = 0;          //Fuel Inlet Prop Side PT
+    input_enable10[8] = 0;         //Fuel Injector PT
+    input_enable10[9] = 0;         //Lox Inlet Prop Side PT
+    } else if (nodeID == 3)  //Prop Node ADC pins to read sensors on
+    {
+    input_enablediff[0] = 0;        //TC
+    input_enablediff[1] = 0;        //TC
+    input_enable1[3] = 0;           //Main Valve Pneumatic PT
+    input_enable10[4] = 0;          //Fuel Dome Reg PT
+    input_enable10[5] = 0;          //Lox Dome Reg PT
+    input_enable100[6] = 0;         //Fuel Tank PT
+    input_enable100[7] = 0;         //Lox Tank PT
+    input_enable100[8] = 0;         //Fuel High Press PT
+    input_enable100[9] = 0;         //Lox High Press PT
+    } */
     
+
   // pin setup
   pinMode(LED_BUILTIN, OUTPUT);
   for (int i = 0; i < PINS; i++)
@@ -252,7 +279,7 @@ void setup() {
 
 ///// CAN0 and CAN1 Initialize /////
   Can0.begin(busSpeed0);
-  Can1.begin(busSpeed1);
+  //Can1.begin(busSpeed1); //commented out for Teensy3.5, also not current in use even on 3.6
   pinMode(pin::led, OUTPUT);
 
 
@@ -285,7 +312,7 @@ tempsensor.setResolution(2);
   //  3    0.0625°C    250 ms
 } */
 
-  timer2 = 0;
+  //timer2 = 0;
 
 }
 
@@ -315,7 +342,8 @@ void loop()
   }
 
   // -----Process Commands Here-----
-  commandExecute(currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag);
+  //currentCommand = command_vent;    //TESTING COMMAND INPUT ONLY
+  commandExecute(currentState, priorState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag);
     
 
   ////// ABORT FUNCTIONALITY!!!///// This is what overrides main valve and igniter processes! /////
@@ -391,6 +419,18 @@ void loop()
             message.buf[1]++; //This is how the example library code did it, not totally sure why this is here
         }  
     }
+  
+  CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
+  
+  Serial.print("currentState :");
+  Serial.println(static_cast<uint8_t>(currentState));
+  Serial.print("currentCommand :");
+  Serial.println(currentCommand);
+  
+  
+  
+  
+  
   sinceRead1 = 0; //resets timer to zero each time the ADC is read
   }
   if (sinceRead10 >= 100) {       //sets the if loop to only run if at least the number given milliseconds have passed
@@ -444,9 +484,9 @@ void loop()
   ///// SENDING VALVE STATES ///// - inside the 10 Hz sensor timer if section
   /* CANwrite(Can0, flagArray, 0);   // need IDs for different returns */
 
+  //Serial.println("Do I even run the 10Hz loop?");
+  //CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
   sinceRead10 = 0; //resets timer to zero each time the ADC is read
-  CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
-
   }
 
 
@@ -498,9 +538,12 @@ void loop()
   }
 startup = false;
 
-digitalWrite(25, 1);
+/* digitalWrite(25, 1);
 digitalWrite(26, 1);
 digitalWrite(27, 1);
-digitalWrite(24, 1);
+digitalWrite(24, 1); */
+
+
+
 
 }

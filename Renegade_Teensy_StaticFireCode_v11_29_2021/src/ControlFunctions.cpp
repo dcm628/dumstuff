@@ -1,6 +1,7 @@
 #include "ControlFunctions.h"
 #include "pinList.h"
 
+
 void startupStateCheck(const State& currentState, Command& currentCommand)
 {
     switch (currentState)
@@ -26,7 +27,7 @@ void startupStateCheck(const State& currentState, Command& currentCommand)
     case State::fireArmed:
         currentCommand = command_fireArm;
         break;
-    case State::fire: // if we powercycle mid fire, we just vent
+    case State::fire: // if we powercycle mid fire, we just vent (maybe shouldn't always be true with multinode systems)
         currentCommand = command_vent;
         break;
     case State::abort:
@@ -55,7 +56,7 @@ void haltFlagCheck(bool & haltFlag, const std::array<Valve*, NUM_VALVES>& valveA
 }
 
 
-void commandExecute(State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag)
+void commandExecute(State& currentState, State& priorState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag)
 {
     switch (currentCommand)
     {
@@ -85,6 +86,8 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             haltFlag = false;
             break;
         case command_test:
+            if(currentState == State::passive)
+            {
             currentState = State::test;
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::On);
@@ -92,7 +95,30 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);                        
+            }
             break;
+        case command_EnterOffNominal:
+            priorState = currentState; //for remembering the state the system was in when entering Off Nominal
+            currentState = State::offNominal;
+/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(1)->setState(ValveEnableState::On);
+            valveEnableArray.at(2)->setState(ValveEnableState::On);
+            valveEnableArray.at(3)->setState(ValveEnableState::On);
+            valveEnableArray.at(4)->setState(ValveEnableState::On);
+            valveEnableArray.at(5)->setState(ValveEnableState::On);   */
+            break;            
+        case command_ExitOffNominal:
+            if(currentState == State::offNominal)
+            {
+            currentState = priorState;
+/*             valveEnableArray.at(0)->setState(ValveEnableState::On);
+            valveEnableArray.at(1)->setState(ValveEnableState::On);
+            valveEnableArray.at(2)->setState(ValveEnableState::On);
+            valveEnableArray.at(3)->setState(ValveEnableState::On);
+            valveEnableArray.at(4)->setState(ValveEnableState::On);
+            valveEnableArray.at(5)->setState(ValveEnableState::On);   */                      
+            }
+            break;        
         case command_abort:
             haltFlag = true;
             currentState = State::abort;
@@ -273,9 +299,17 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             {
                 valveArray.at(0)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(0)->setState(ValveState::CloseCommanded);
+            }
             break;
         case command_openHiPress:
              if(currentState == State::test)
+            {
+                valveArray.at(0)->setState(ValveState::OpenCommanded);
+            }
+            else if (currentState == State::offNominal)
             {
                 valveArray.at(0)->setState(ValveState::OpenCommanded);
             }
@@ -285,108 +319,180 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
             {
                 valveArray.at(1)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(1)->setState(ValveState::CloseCommanded);
+            }            
             break;
         case command_openHiPressVent:
              if(currentState == State::test)
             {
                 valveArray.at(1)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(1)->setState(ValveState::OpenCommanded);
+            }              
             break;
         case command_closeLoxVent:
             if(currentState == State::test)
             {
                 valveArray.at(2)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(2)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openLoxVent:
              if(currentState == State::test)
             {
                 valveArray.at(2)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(2)->setState(ValveState::OpenCommanded);
+            }              
             break;
         case command_closeLoxDomeReg:
             if(currentState == State::test)
             {
                 valveArray.at(3)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(3)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openLoxDomeReg:
              if(currentState == State::test)
             {
                 valveArray.at(3)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(3)->setState(ValveState::OpenCommanded);
+            }              
             break; 
         case command_closeLoxDomeRegVent:
             if(currentState == State::test)
             {
                 valveArray.at(4)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(4)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openLoxDomeRegVent:
              if(currentState == State::test)
             {
                 valveArray.at(4)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(4)->setState(ValveState::OpenCommanded);
+            }              
             break; 
         case command_closeFuelVent:
             if(currentState == State::test)
             {
                 valveArray.at(5)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(5)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openFuelVent:
              if(currentState == State::test)
             {
                 valveArray.at(5)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(5)->setState(ValveState::OpenCommanded);
+            }              
             break;
         case command_closeFuelDomeReg:
             if(currentState == State::test)
             {
                 valveArray.at(6)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(6)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openFuelDomeReg:
              if(currentState == State::test)
             {
                 valveArray.at(6)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(6)->setState(ValveState::OpenCommanded);
+            }              
             break; 
         case command_closeFuelDomeRegVent:
             if(currentState == State::test)
             {
                 valveArray.at(7)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(7)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openFuelDomeRegVent:
              if(currentState == State::test)
             {
                 valveArray.at(7)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(7)->setState(ValveState::OpenCommanded);
+            }              
             break; 
         case command_closeLoxMV:
             if(currentState == State::test)
             {
                 valveArray.at(8)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(8)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openLoxMV:
              if(currentState == State::test)
             {
                 valveArray.at(8)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(8)->setState(ValveState::OpenCommanded);
+            }              
             break;
         case command_closeFuelMV:
             if(currentState == State::test)
             {
                 valveArray.at(9)->setState(ValveState::CloseCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(9)->setState(ValveState::CloseCommanded);
+            }              
             break;
         case command_openFuelMV:
              if(currentState == State::test)
             {
                 valveArray.at(9)->setState(ValveState::OpenCommanded);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveArray.at(9)->setState(ValveState::OpenCommanded);
+            }              
             break;
         case command_disableHiPressHiVentSafety:
             if(currentState == State::test)
@@ -394,6 +500,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(0)->setState(ValveEnableState::Off);
                 //digitalWrite(pin::HiPressHiVentSafe, 0);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(0)->setState(ValveEnableState::Off);
+                //digitalWrite(pin::HiPressHiVentSafe, 0);
+            }              
             break;
         case command_enableHiPressHiVentSafety:
             if(currentState == State::test)
@@ -401,6 +512,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(0)->setState(ValveEnableState::On);
                 //digitalWrite(pin::HiPressHiVentSafe, 1);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(0)->setState(ValveEnableState::On);
+                //digitalWrite(pin::HiPressHiVentSafe, 1);
+            }              
             break;
         case command_disableFuelVentSafety:
             if(currentState == State::test)
@@ -408,6 +524,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(1)->setState(ValveEnableState::Off);
                 //digitalWrite(pin::FuelVentSafe, 0);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(1)->setState(ValveEnableState::Off);
+                //digitalWrite(pin::FuelVentSafe, 0);
+            }              
             break;
         case command_enableFuelVentSafety:
             if(currentState == State::test)
@@ -415,6 +536,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(1)->setState(ValveEnableState::On);
                 //digitalWrite(pin::FuelVentSafe, 1);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(1)->setState(ValveEnableState::On);
+                //digitalWrite(pin::FuelVentSafe, 1);
+            }              
             break;
         case command_disableLoxDomeRegLoxDomeVentSafety:
             if(currentState == State::test)
@@ -422,6 +548,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(2)->setState(ValveEnableState::Off);
                 //digitalWrite(pin::LoxDomeRegVentSafe, 0);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(2)->setState(ValveEnableState::Off);
+                //digitalWrite(pin::LoxDomeRegVentSafe, 0);
+            }              
             break;
         case command_enableLoxDomeRegLoxDomeVentSafety:
             if(currentState == State::test)
@@ -429,6 +560,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(2)->setState(ValveEnableState::On);
                 //digitalWrite(pin::LoxDomeRegVentSafe, 1);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(2)->setState(ValveEnableState::On);
+                //digitalWrite(pin::LoxDomeRegVentSafe, 1);
+            }              
             break;
         case command_disableFuelDomeRegFuelDomeVentSafety:
             if(currentState == State::test)
@@ -436,6 +572,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(3)->setState(ValveEnableState::Off);
                 //digitalWrite(pin::FuelDomeRegVentSafe, 0);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(3)->setState(ValveEnableState::Off);
+                //digitalWrite(pin::FuelDomeRegVentSafe, 0);
+            }              
             break;
         case command_enableFuelDomeRegFuelDomeVentSafety:
             if(currentState == State::test)
@@ -443,6 +584,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(3)->setState(ValveEnableState::On);
                 //digitalWrite(pin::FuelDomeRegVentSafe, 1);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(3)->setState(ValveEnableState::On);
+                //digitalWrite(pin::FuelDomeRegVentSafe, 1);
+            }              
             break;
         case command_disableLoxVentSafety:
             if(currentState == State::test)
@@ -450,6 +596,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(4)->setState(ValveEnableState::Off);
                 //digitalWrite(pin::LoxVentSafe, 0);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(4)->setState(ValveEnableState::Off);
+                //digitalWrite(pin::LoxVentSafe, 0);
+            }              
             break;
         case command_enableLoxVentSafety:
             if(currentState == State::test)
@@ -457,6 +608,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(4)->setState(ValveEnableState::On);
                 //digitalWrite(pin::LoxVentSafe, 1);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(4)->setState(ValveEnableState::On);
+                //digitalWrite(pin::LoxVentSafe, 1);
+            }              
             break;
         case command_disableMainValvesSafety:
             if(currentState == State::test)
@@ -464,6 +620,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(5)->setState(ValveEnableState::Off);
                 //digitalWrite(pin::MainValvesSafe, 0);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(5)->setState(ValveEnableState::Off);
+                //digitalWrite(pin::MainValvesSafe, 0);
+            }              
             break;
         case command_enableMainValvesSafety:
             if(currentState == State::test)
@@ -471,6 +632,11 @@ void commandExecute(State& currentState, Command& currentCommand, const std::arr
                 valveEnableArray.at(5)->setState(ValveEnableState::On);
                 //digitalWrite(pin::MainValvesSafe, 1);
             }
+            else if (currentState == State::offNominal)
+            {
+                valveEnableArray.at(5)->setState(ValveEnableState::On);
+                //digitalWrite(pin::MainValvesSafe, 1);
+            }              
             break;
         default:
             break;

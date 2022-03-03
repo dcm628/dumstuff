@@ -6,22 +6,22 @@
 enum class State
 {
     // These are the God States, they can be reached from any position
-    setup,      //
-    debug,      // the outputs disabled for testing state?
-    passive,    //
-    test,       //
-    abort,      //
-    vent,       //
-    offNominal, // off nominal is for when individual valves are actuated out of sequence
+    setup,      // 0
+    debug,      // 1   the outputs disabled for testing state?
+    passive,    // 2
+    test,       // 3
+    abort,      // 4
+    vent,       // 5
+    offNominal, // 6   off nominal is for when individual valves are actuated out of sequence
 
 
     // These states can only be accessed in sequence, from passive
-    HiPressArm,
-    HiPressPressurized,
-    TankPressArm,
-    TankPressPressurized,
-    fireArmed,
-    fire,
+    HiPressArm,             // 7
+    HiPressPressurized,     // 8
+    TankPressArm,           // 9
+    TankPressPressurized,   // 10
+    fireArmed,              // 11
+    fire,                   // 12
 
 };
 

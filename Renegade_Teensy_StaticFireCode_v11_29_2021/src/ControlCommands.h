@@ -20,6 +20,8 @@ enum Command
     commend_TankPressPressurized = 17,
     command_fireArm = 19,
     command_fire = 21,                      //End of global states
+    command_ExitOffNominal = 22,
+    command_EnterOffNominal = 23,
     command_closeHiPress = 32,              //Start of individual device states
     command_openHiPress = 33,
     command_closeHiPressVent = 34,

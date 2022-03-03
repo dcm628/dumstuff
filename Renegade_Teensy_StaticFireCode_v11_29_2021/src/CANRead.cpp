@@ -24,7 +24,7 @@ bool CANread(FlexCAN& CANbus, Command& CurrentCommand)
     {
         if(CANbus.read(msg))                                                                // read occurs inside if statement
         {
-            if(msg.id == 0) //id = 0 is the only command frame ID to be used for state control
+            if(msg.id == 0||1) //id = 0 is the only command frame ID to be used for state control, temporarily added ID = 1 as well because of dumb GUI versions
             {
                 NewMessage = true;                                                              // set new message flag to true if message recieved and read
 
