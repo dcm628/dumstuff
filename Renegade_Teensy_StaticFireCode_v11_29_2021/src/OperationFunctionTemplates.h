@@ -17,12 +17,12 @@
 
 //  CALL THIS FUNCTION EVERY LOOP 
     // This function takes the array of pointers that point to the valve objects, and then calls the .stateOperations() method for each valve
-    // Make sure valveArray is an array of pointers, as defined in ValveDefinitions.h
+    // Make sure valveArr is an array of pointers, as defined in ValveDefinitions.h
 template <typename T, std::size_t size>
-void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeID)
+void valveTasks(const std::array<T, size>& valveArr, uint8_t& nodeID)
 {
     // iterate through valve array and run the stateOperations method
-    for(auto valve : valveArray)
+    for(auto valve : valveArr)
     {
     
         if (valve->getValveNodeID() == nodeID)
@@ -34,10 +34,10 @@ void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeID)
 }
 
 template <typename T, std::size_t size>
-void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& nodeID)
+void valveEnableTasks(const std::array<T, size>& valveEnableArr, uint8_t& nodeID)
 {
     // iterate through valve array and run the stateOperations method
-    for(auto valveEnable : valveEnableArray)
+    for(auto valveEnable : valveEnableArr)
     {
         if (valveEnable->getValveEnableNodeID() == nodeID)
 /*             Serial.println("valve node ID");
@@ -67,10 +67,10 @@ void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
 }
 
 template <typename T, std::size_t size>
-void autoSequenceTasks(const std::array<T, size>& autoSequenceArray, uint8_t& nodeID)
+void autoSequenceTasks(const std::array<T, size>& autoSequenceArr, uint8_t& nodeID)
 {
     // iterate through valve array and run the stateOperations method
-    for(auto autoSequence : autoSequenceArray)
+    for(auto autoSequence : autoSequenceArr)
     {
         
     //if (autoSequence->getAutoSequenceNodeID() == nodeID)
@@ -83,12 +83,12 @@ void autoSequenceTasks(const std::array<T, size>& autoSequenceArray, uint8_t& no
 
 
 // CALL THIS FUNCTION ONCE IN SETUP, THIS SETS THE VALVE PINMODES
-    // make sure to pass this function valveArray, as defined in ValveDefinitions.h
+    // make sure to pass this function valveArr, as defined in ValveDefinitions.h
 template <typename T, std::size_t size>
-void valveSetUp(const std::array<T, size>& valveArray)
+void valveSetUp(const std::array<T, size>& valveArr)
 {
     // iterate through valve array and run the stateOperations method
-    for(auto valve : valveArray)
+    for(auto valve : valveArr)
     {
         valve->begin();
         //Serial.print("LoopRan");
@@ -96,10 +96,10 @@ void valveSetUp(const std::array<T, size>& valveArray)
 }
 
 template <typename T, std::size_t size>
-void valveEnableSetUp(const std::array<T, size>& valveEnableArray)
+void valveEnableSetUp(const std::array<T, size>& valveEnableArr)
 {
     // iterate through valve array and run the stateOperations method
-    for(auto valveEnable : valveEnableArray)
+    for(auto valveEnable : valveEnableArr)
     {
         valveEnable->begin();
         //Serial.print("LoopRan");
@@ -118,10 +118,10 @@ void pyroSetUp(const std::array<T, size>& pyroArray)
 }
 
 template <typename T, std::size_t size>
-void autoSequenceSetUp(const std::array<T, size>& autoSequenceArray)
+void autoSequenceSetUp(const std::array<T, size>& autoSequenceArr)
 {
     // iterate through valve array and run the stateOperations method
-    for(auto autoSequence : autoSequenceArray)
+    for(auto autoSequence : autoSequenceArr)
     {
         autoSequence->begin();
         //Serial.print("LoopRan");

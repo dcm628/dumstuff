@@ -28,10 +28,15 @@ using std::string;
 //#include "ControlFunctions.h"
 #include "PyroClass.h"
 #include "PyroDefinitions.h"
+#include "AutoSequenceDefinitions.h"
 
 
 #include <TimeLib.h>
-#include <DS1307RTC.h> 
+#include <DS1307RTC.h>
+
+AutoSequence IgnitionAutoSequence(15000, 2); // X seconds in micros to set the countdownStart
+
+const std::array<AutoSequence*, NUM_AUTOSEQUENCES> autoSequenceArray{&IgnitionAutoSequence};
 
 
 bool abortHaltFlag; //creates halt flag
