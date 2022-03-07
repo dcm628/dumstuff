@@ -25,7 +25,7 @@ using std::string;
 #include "SensorDefinitions.h"
 #include "StateList.h"
 #include "pinList.h"
-#include "ControlFunctions.h"
+//#include "ControlFunctions.h"
 #include "PyroClass.h"
 #include "PyroDefinitions.h"
 
@@ -196,6 +196,9 @@ void setup() {
   // -----Run Valve Setup-----
   pyroSetUp(pyroArray);
 
+   // -----Run AutoSequence Setup-----
+  autoSequenceSetUp(autoSequenceArray);
+
 
   //assign which sample rate array to choose for each input enable
   if (nodeID == 2) //Engine Node ADC pins to read sensors on
@@ -343,17 +346,18 @@ void loop()
 
   // -----Process Commands Here-----
   //currentCommand = command_vent;    //TESTING COMMAND INPUT ONLY
-  commandExecute(currentState, priorState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag);
+  commandExecute(currentState, priorState, currentCommand, valveArray, pyroArray, valveEnableArray, autoSequenceArray, abortHaltFlag);
     
 
   ////// ABORT FUNCTIONALITY!!!///// This is what overrides main valve and igniter processes! /////
   ////// DO NOT MOVE BEFORE "commandExecute" or after "valveTasks"/"pyroTasks"!!! /////
   haltFlagCheck(abortHaltFlag, valveArray, pyroArray, valveEnableArray);
 
-  // -----Advance needed valve and pyro tasks-----
+  // -----Advance needed propulsion system tasks (valve, valve enables, pyro, autosequences) -----
   valveTasks(valveArray, nodeID);
   valveEnableTasks(valveEnableArray, nodeID);
   pyroTasks(pyroArray, nodeID);
+  autoSequenceTasks(autoSequenceArray,nodeID);
 
 /*     Serial.print("abortHaltFlag: ");
     Serial.println(abortHaltFlag); */
@@ -363,14 +367,6 @@ void loop()
   cli(); // disables interrupts to protect write command
   EEPROM.update(stateAddress, static_cast<uint8_t>(currentState)); // Never use .write()
   sei(); // reenables interrupts after write is completed
-
-/*     // Get and send valve status - NEEDS UPDATED FOR MY STATE FORMATS
-  std::bitset<BITFLAG_SIZE> valveFlags{setValveFlags(valveArray)};
-  std::array<uint8_t, 2> flagArray{};
-  flagArray.at(0) = (valveFlags >> 8).to_ulong() & 0xff;
-  flagArray.at(1) = valveFlags.to_ulong() & 0xff; */
-
-
 
 
 
@@ -421,7 +417,8 @@ void loop()
     }
   
   CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
-  
+  CAN2AutosequenceTimerReport(Can0, autoSequenceArray, abortHaltFlag, nodeID);
+
   Serial.print("currentState :");
   Serial.println(static_cast<uint8_t>(currentState));
   Serial.print("currentCommand :");

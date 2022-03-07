@@ -9,9 +9,8 @@
 #include "CANWrite.h"
 #include "StateList.h"
 #include "pinList.h"
-
 #include "ControlFunctions.h"
-
+#include "AutoSequenceDefinitions.h"
 #include <vector>
 
 //#include "AutoSequence.h"
@@ -108,48 +107,37 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
 //return ;
 }
 
-/* bool CAN2AutosequenceTimerReport(FlexCAN& CANbus, AutoSequence& autoSequence, bool & haltFlag, int nodeID, int32_t autosequenceTimer)
+void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*, NUM_AUTOSEQUENCES>& autoSequenceArray, bool & haltFlag, int nodeID)
 {
 // build message
     static CAN_message_t msgOut;
     msgOut.ext = 0;
-    msgOut.id = nodeID + 16;  // with 16 possible nodes in ID format this makes the CAN ID possible go up to 31, lowest sensor ID in current format is 50.
-
-
-    //uint8_t valveID = static_cast<uint8_t>(autoSequence->getValveID());    
-    uint8_t autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getState());
-
-
-    //int8_t currentStateEnumToInt = static_cast<int8_t>(currentState);
-    //bool ValveSafetyEnableStateArray[3] ={};
-    //uint8_t ShiftedValveSafetyEnableStateArray = 0;
-
-    int8_t autosequenceTimerState = autoSequence->getAutoSequenceState;
-    msgOut.buf[0] = autosequenceTimerState;
-
-    msgOut.buf[1] = autosequenceTimer;
-    msgOut.buf[2] = (autosequenceTimer >> 8);
-    msgOut.buf[3] = (autosequenceTimer >> 16);
-    msgOut.buf[4] = (autosequenceTimer >> 24);
-
-    //message.buf[0] = (roundedtemp >> 8) & 0xff;
-    //message.buf[1] = roundedtemp & 0xff;
-    //message.buf[2] = (roundedtemp >> 8) & 0xff;
-    //message.buf[3] = roundedtemp & 0xff;
-    // message.buf[4] = (roundedtemp >> 8) & 0xff;
-    // message.buf[5] = roundedtemp & 0xff;
-    // message.buf[6] = (roundedtemp >> 8) & 0xff;
-    // message.buf[7] = roundedtemp & 0xff;
- 
- 
-    // write message to bus
-
-    CANbus.write(msgOut);
+    //change ID format to be better and match my updated plan
+    for(auto autoSequence : autoSequenceArray)
     {
-        // add write error handling here, for now it does nothing
-    }
+        msgOut.id = nodeID + 16;  // with 16 possible nodes in ID format this makes the CAN ID possible go up to 31, lowest sensor ID in current format is 50.
 
-} */
+        int32_t autosequenceTimer = autoSequence->getCurrentCountdown();
+        uint8_t autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getAutoSequenceState());
+
+
+        //int8_t autosequenceTimerState = autoSequence->getAutoSequenceState;
+        msgOut.buf[0] = autosequenceTimerStateEnumToInt;
+
+        msgOut.buf[1] = autosequenceTimer;
+        msgOut.buf[2] = (autosequenceTimer >> 8);
+        msgOut.buf[3] = (autosequenceTimer >> 16);
+        msgOut.buf[4] = (autosequenceTimer >> 24);
+    
+    
+        // write message to bus
+        CANbus.write(msgOut);
+        {
+            // add write error handling here, for now it does nothing
+        }
+    
+    }
+}
 
 
 /* bool CAN2ValveStateReport()
@@ -163,48 +151,18 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
 
 
 
+////// CAN FD Upgrade Versions //////
+// TBD //
+
 /* bool CANFDPropSystemStateReport()
 {
-    int8_t byte0 = 0;
-
-
-
 
 } */
-
-
 
 
 /* bool CANFDValveStateReport()
 {
-    int8_t byte0 = 0;
-
-
-
 
 } */
-
-
-
-
-
-
-
-
-
-
-
-
-
-//#include "AutoSequence.h"
-
-// 
-//void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag, uint8_t nodeID) {
-
-//}
-
-//bool CAN2AutosequenceTimerReport(FlexCAN& CANbus, AutoSequence& autoSequence, bool & haltFlag, int nodeID, int8_t autosequencetimer, uint8_t autosequenceTimerState)
-
-
 
 #endif

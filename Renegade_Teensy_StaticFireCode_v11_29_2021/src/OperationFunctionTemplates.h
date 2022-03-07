@@ -66,6 +66,21 @@ void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
     }
 }
 
+template <typename T, std::size_t size>
+void autoSequenceTasks(const std::array<T, size>& autoSequenceArray, uint8_t& nodeID)
+{
+    // iterate through valve array and run the stateOperations method
+    for(auto autoSequence : autoSequenceArray)
+    {
+        
+    //if (autoSequence->getAutoSequenceNodeID() == nodeID)
+            //{
+            autoSequence->stateOperations();
+            //Serial.print("LoopRan");
+            //}
+    }
+}
+
 
 // CALL THIS FUNCTION ONCE IN SETUP, THIS SETS THE VALVE PINMODES
     // make sure to pass this function valveArray, as defined in ValveDefinitions.h
@@ -101,6 +116,18 @@ void pyroSetUp(const std::array<T, size>& pyroArray)
         //Serial.print("LoopRan");
     }
 }
+
+template <typename T, std::size_t size>
+void autoSequenceSetUp(const std::array<T, size>& autoSequenceArray)
+{
+    // iterate through valve array and run the stateOperations method
+    for(auto autoSequence : autoSequenceArray)
+    {
+        autoSequence->begin();
+        //Serial.print("LoopRan");
+    }
+}
+
 
 /* // This function outputs a bitset contianing flags about the valve status, to be sent back to the console via CAN
 template <typename T, std::size_t size>
