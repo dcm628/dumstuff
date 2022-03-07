@@ -1,10 +1,12 @@
-#include <Arduino.h>
 #include <FlexCAN.h>
 #include <array>
 #include "CANRead.h"
 #include "ControlCommands.h"
+#include "AutoSequence.h"
 
 // function to be run every loop to check for a new CAN message
+
+
 
 bool CANread(FlexCAN& CANbus, Command& CurrentCommand)
 {
@@ -31,15 +33,15 @@ bool CANread(FlexCAN& CANbus, Command& CurrentCommand)
                 // add CAN messages to internal buffer
                 for(uint8_t index{0}; index < msg.len; ++index)                                 // restrict to length of message
                 {
-                
-                
+
+
                     if(msg.buf[index] < command_SIZE)                                           // this checks if the message at that location in the buffer could be a valid command
                     {
                         // convert message to a Command type and save it to the buffer
                         CommandBuffer.at(CommandBufferIndex) = static_cast<Command>(msg.buf[index]);
                         ++CommandBufferIndex;                                                   // increment buffer index
                     }
-                
+
                 }
             }
 

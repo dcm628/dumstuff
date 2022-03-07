@@ -1,5 +1,6 @@
 #include "ControlFunctions.h"
 #include "pinList.h"
+#include "AutoSequenceDefinitions.h"
 
 
 void startupStateCheck(const State& currentState, Command& currentCommand)
@@ -56,7 +57,7 @@ void haltFlagCheck(bool & haltFlag, const std::array<Valve*, NUM_VALVES>& valveA
 }
 
 
-void commandExecute(State& currentState, State& priorState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, const std::array<AutoSequence*, NUM_AUTOSEQUENCES>& autoSequenceArray, bool & haltFlag)
+void commandExecute(State& currentState, State& priorState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, const std::array<AutoSequence*, NUM_AUTOSEQUENCES>& autoSequenceArr, bool & haltFlag)
 {
     switch (currentCommand)
     {
@@ -82,7 +83,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::Off);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::passive;
             haltFlag = false;
             break;
@@ -123,7 +124,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
         case command_abort:
             haltFlag = true;
             currentState = State::abort;
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Hold);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Hold);
             break;
         case command_vent:
             valveArray.at(0)->setState(ValveState::CloseCommanded);
@@ -144,7 +145,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Hold);            
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Hold);
             currentState = State::vent;
             break;
 // Fire Sequence commands will only be executed from the proper state
@@ -169,7 +170,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::HiPressArm;
             }
             break;
@@ -194,7 +195,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::HiPressPressurized;
             }
             break;
@@ -219,7 +220,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::TankPressArm;
             }
             break;
@@ -244,7 +245,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::TankPressPressurized;
             }
             break;
@@ -269,7 +270,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::fireArmed;
             }
             break;
@@ -294,7 +295,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            autoSequenceArray.at(0)->setState(AutoSequenceState::RunCommanded);
+            autoSequenceArr.at(0)->setState(AutoSequenceState::RunCommanded);
             currentState = State::fire;
             }
             break;

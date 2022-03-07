@@ -10,13 +10,13 @@
 #include "StateList.h"
 #include "pinList.h"
 #include "ControlFunctions.h"
-#include "AutoSequenceDefinitions.h"
 #include <vector>
 
 //#include "AutoSequence.h"
 
+
 // General Level State Report - covers overall state of whole node
-void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag, uint8_t nodeID)
+void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArr, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArr, bool & haltFlag, uint8_t nodeID)
 {
 // , int8_t autosequencetimer
 //Serial.println("Do I even run the State Report?");
@@ -26,21 +26,21 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     msgOut.id = nodeID;  //Make this more specific later
 
     // CAN BYTE - System state and Valve Safety Enable States
-    int8_t currentStateEnumToInt = static_cast<int8_t>(currentState);
+    auto currentStateEnumToInt = static_cast<int8_t>(currentState);
     //Serial.print("static cast of StateEnumToInt: ");
     //Serial.println(currentStateEnumToInt);
     bool ValveSafetyEnableStateArray[3] ={};
     uint8_t ShiftedValveSafetyEnableStateArray = 0;
 
     // iterate through valveEnable array and get states for state report
-    for(auto valveEnable : valveEnableArray)
+    for(auto valveEnable : valveEnableArr)
     {
         if (valveEnable->getValveEnableNodeID() == nodeID)
         {    
-            for (size_t i = 0; i < 3; i++) //I need to add something for sizes less than 3 so it doesn't bug out
+            for (bool & i : ValveSafetyEnableStateArray) //I need to add something for sizes less than 3 so it doesn't bug out
             {
             bool ValveEnableEnumToBool = static_cast<bool>(valveEnable->getState());
-            ValveSafetyEnableStateArray[i] = ValveEnableEnumToBool;
+            i = ValveEnableEnumToBool;
             }
         }        
     }
@@ -53,7 +53,7 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     ShiftedValveSafetyEnableStateArray = ShiftedValveSafetyEnableStateArray + loopyboi;
     }
 
-    //valveEnableArray;
+    //valveEnableArr;
     msgOut.buf[0] = currentStateEnumToInt + ShiftedValveSafetyEnableStateArray;
     //msgOut.buf[0] = 111;
 
@@ -63,13 +63,13 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     {
     
         // iterate through valve array 
-        for(auto valve : valveArray)
+        for(auto valve : valveArr)
         {
     
             if (valve->getValveNodeID() == nodeID)
             {
-            uint8_t valveID = static_cast<uint8_t>(valve->getValveID());    
-            uint8_t ValveStateEnumToInt = static_cast<uint8_t>(valve->getState());
+            auto valveID = static_cast<uint8_t>(valve->getValveID());
+            auto ValveStateEnumToInt = static_cast<uint8_t>(valve->getState());
             uint8_t ShiftedValveStateEnumToInt = (ValveStateEnumToInt<<5);
             
             msgOut.buf[canByte] = valveID + ShiftedValveStateEnumToInt;
@@ -92,9 +92,9 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     Serial.print("ID: ");
     Serial.print(msgOut.id);
     Serial.print(": ");
-    for (size_t ii = 0; ii < 8; ii++)
+    for (unsigned char ii : msgOut.buf)
     {
-        Serial.print(msgOut.buf[ii]);
+        Serial.print(ii);
         Serial.print(": ");
     }
     Serial.println();
@@ -107,18 +107,18 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
 //return ;
 }
 
-void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*, NUM_AUTOSEQUENCES>& autoSequenceArray, bool & haltFlag, int nodeID)
+void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*, NUM_AUTOSEQUENCES>& autoSequenceArr, bool & haltFlag, int nodeID)
 {
 // build message
     static CAN_message_t msgOut;
     msgOut.ext = 0;
     //change ID format to be better and match my updated plan
-    for(auto autoSequence : autoSequenceArray)
+    for(auto autoSequence : autoSequenceArr)
     {
         msgOut.id = nodeID + 16;  // with 16 possible nodes in ID format this makes the CAN ID possible go up to 31, lowest sensor ID in current format is 50.
 
         int32_t autosequenceTimer = autoSequence->getCurrentCountdown();
-        uint8_t autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getAutoSequenceState());
+        auto autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getAutoSequenceState());
 
 
         //int8_t autosequenceTimerState = autoSequence->getAutoSequenceState;

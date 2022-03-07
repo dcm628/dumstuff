@@ -3,12 +3,9 @@
 #include <array>
 #include "ValveClass.h"
 #include "ControlCommands.h"
-#include "CANWrite.h"
 #include "StateList.h"
-#include "pinList.h"
-#include <vector>
 #include "ControlFunctions.h"
-//#include "AutoSequence.h"
+#include "AutoSequence.h"
 
 // General Level State Report - covers overall state of whole node
 void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag, uint8_t nodeID, int8_t autosequencetimer)
@@ -28,10 +25,10 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     {
         if (valveEnable->getValveEnableNodeID() == nodeID)
         {    
-            for (size_t i = 0; i < 3; i++) //I need to add something for sizes less than 3 so it doesn't bug out
+            for (bool & i : ValveSafetyEnableStateArray) //I need to add something for sizes less than 3 so it doesn't bug out
             {
             bool ValveEnableEnumToBool = static_cast<bool>(valveEnable->getState());
-            ValveSafetyEnableStateArray[i] = ValveEnableEnumToBool;
+            i = ValveEnableEnumToBool;
             }
         }        
     }
@@ -70,9 +67,9 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     }
     
     // write message to bus
-    for (size_t i = 0; i < 8; i++)
+    for (unsigned char i : msgOut.buf)
     {
-        Serial.print(msgOut.buf[i]);
+        Serial.print(i);
         Serial.print(": ");
     }
     Serial.println();
