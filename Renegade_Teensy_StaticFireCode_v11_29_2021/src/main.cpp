@@ -1,4 +1,4 @@
-//#include <SensorHeader.h>
+
 #include <Arduino.h>
 #include <EEPROM.h>
 #include <ADC.h>
@@ -14,24 +14,18 @@
 #include <list>
 using std::string;
 
-#include "ValveClass.h"
-#include "ValveDefinitions.h"
 #include "CANRead.h"
 #include "CANWrite.h"
 #include "CANReports.h"
-#include "ControlCommands.h"
 #include "OperationFunctionTemplates.h"
-#include "SensorClass.h"
-#include "SensorDefinitions.h"
-#include "StateList.h"
 #include "pinList.h"
 //#include "ControlFunctions.h"
-#include "PyroClass.h"
+#include "ValveDefinitions.h"
 #include "PyroDefinitions.h"
+#include "AutoSequenceDefinitions.h"
 
-
-#include <TimeLib.h>
-#include <DS1307RTC.h> 
+/* #include <TimeLib.h>
+#include <DS1307RTC.h>  */
 
 
 bool abortHaltFlag; //creates halt flag
@@ -416,8 +410,8 @@ void loop()
         }  
     }
   
-  CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
-  CAN2AutosequenceTimerReport(Can0, autoSequenceArray, abortHaltFlag, nodeID);
+  //CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
+  //CAN2AutosequenceTimerReport(Can0, autoSequenceArray, abortHaltFlag, nodeID);
 
   Serial.print("currentState :");
   Serial.println(static_cast<uint8_t>(currentState));

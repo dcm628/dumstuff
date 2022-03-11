@@ -5,14 +5,19 @@
 #include "ControlCommands.h"
 #include "ValveClass.h"
 #include "PyroClass.h"
-#include "AutoSequenceDefinitions.h"
-#include "AutoSequenceStates.h"
+#include "AutoSequenceClass.h"
 #include <array>
+
+//importing these for the NUM_ defines and passing into ControlFunctions.cpp
+/* #include "ValveDefinitions.h"
+#include "PyroDefinitions.h"
+#include "AutoSequenceDefinitions.h" */
+
 
 #define NUM_VALVES 10
 #define NUM_VALVEENABLE 6
 #define NUM_PYROS 2
-
+#define NUM_AUTOSEQUENCES 1
 
 
 // checks the state that was set at start-up and issues the appropriate command as current command

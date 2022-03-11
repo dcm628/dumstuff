@@ -4,16 +4,12 @@
 #include <Arduino.h>
 #include <FlexCAN.h>
 #include <array>
-#include "ValveClass.h"
-#include "ControlCommands.h"
+
 #include "CANWrite.h"
 #include "StateList.h"
-#include "pinList.h"
 #include "ControlFunctions.h"
-#include "AutoSequenceDefinitions.h"
 #include <vector>
 
-//#include "AutoSequence.h"
 
 // General Level State Report - covers overall state of whole node
 void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag, uint8_t nodeID)

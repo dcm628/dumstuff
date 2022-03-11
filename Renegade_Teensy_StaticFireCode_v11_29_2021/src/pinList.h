@@ -31,13 +31,7 @@ namespace pin
     const int FuelDomeRegVentSafe{26};
     const int LoxVentSafe{27};
     
-    
-
-
 
 };
-
-
-
 
 #endif

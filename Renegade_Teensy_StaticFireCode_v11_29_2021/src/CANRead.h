@@ -1,7 +1,7 @@
 #ifndef CANREAD_H
 #define CANREAD_H
 
-#include <FlexCAN.h>
+//#include <FlexCAN.h>
 #include "ControlCommands.h"
 
 // header file for the function to call every loop, function returns true if a new message was read

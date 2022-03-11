@@ -1,5 +1,5 @@
 #include "ControlFunctions.h"
-#include "pinList.h"
+//#include "pinList.h"
 
 
 void startupStateCheck(const State& currentState, Command& currentCommand)

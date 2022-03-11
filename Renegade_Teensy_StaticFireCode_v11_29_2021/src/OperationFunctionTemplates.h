@@ -1,11 +1,12 @@
 #ifndef OPERATIONFUNCTIONS_H
 #define OPERATIONFUNCTIONS_H
 
-#define BITFLAG_SIZE 16
+//#define BITFLAG_SIZE 16
 
-#include "ValveClass.h"
-#include "PyroClass.h"
-#include "SensorClass.h"
+//#include "ValveClass.h"
+//#include "PyroClass.h"
+//#include "SensorClass.h"
+//#include "AutoSequence.h"
 #include <array>
 #include <bitset>
 #include <FlexCAN.h>
@@ -19,13 +20,13 @@
     // This function takes the array of pointers that point to the valve objects, and then calls the .stateOperations() method for each valve
     // Make sure valveArray is an array of pointers, as defined in ValveDefinitions.h
 template <typename T, std::size_t size>
-void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeID)
+void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeIDReadIn)
 {
     // iterate through valve array and run the stateOperations method
     for(auto valve : valveArray)
     {
     
-        if (valve->getValveNodeID() == nodeID)
+        if (valve->getValveNodeID() == nodeIDReadIn)
             {
             valve->stateOperations();
             //Serial.print("LoopRan");
@@ -34,12 +35,12 @@ void valveTasks(const std::array<T, size>& valveArray, uint8_t& nodeID)
 }
 
 template <typename T, std::size_t size>
-void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& nodeID)
+void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& nodeIDReadIn)
 {
     // iterate through valve array and run the stateOperations method
     for(auto valveEnable : valveEnableArray)
     {
-        if (valveEnable->getValveEnableNodeID() == nodeID)
+        if (valveEnable->getValveEnableNodeID() == nodeIDReadIn)
 /*             Serial.println("valve node ID");
             Serial.println(valveEnable->getValveEnableNodeID());
             Serial.print("nodeID");
@@ -52,13 +53,13 @@ void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& node
 }
 
 template <typename T, std::size_t size>
-void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
+void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeIDReadIn)
 {
     // iterate through valve array and run the stateOperations method
     for(auto pyro : pyroArray)
     {
         
-    if (pyro->getPyroNodeID() == nodeID)
+    if (pyro->getPyroNodeID() == nodeIDReadIn)
             {
             pyro->stateOperations();
             //Serial.print("LoopRan");
@@ -67,17 +68,17 @@ void pyroTasks(const std::array<T, size>& pyroArray, uint8_t& nodeID)
 }
 
 template <typename T, std::size_t size>
-void autoSequenceTasks(const std::array<T, size>& autoSequenceArray, uint8_t& nodeID)
+void autoSequenceTasks(const std::array<T, size>& autoSequenceArray, uint8_t& nodeIDReadIn)
 {
     // iterate through valve array and run the stateOperations method
     for(auto autoSequence : autoSequenceArray)
     {
         
-    //if (autoSequence->getAutoSequenceNodeID() == nodeID)
-            //{
+    if (autoSequence->getHostNodeID() == nodeIDReadIn)
+            {
             autoSequence->stateOperations();
             //Serial.print("LoopRan");
-            //}
+            }
     }
 }
 
@@ -128,6 +129,27 @@ void autoSequenceSetUp(const std::array<T, size>& autoSequenceArray)
     }
 }
 
+template <typename T, std::size_t size>
+void autoSequenceDeviceUpdate(const std::array<T, size>& autoSequenceArray, const std::array<T, size>& pyroArray, const std::array<T, size>& valveArray)
+{
+    // iterate through valve array and run the stateOperations method
+    for(auto pyro : pyroArray)
+    {
+        
+        //autoSequence->begin();
+        //Serial.print("LoopRan");
+    }
+    
+    for (auto valve : valveArray)
+    {
+
+    }
+
+
+
+
+}
+
 
 /* // This function outputs a bitset contianing flags about the valve status, to be sent back to the console via CAN
 template <typename T, std::size_t size>
@@ -154,7 +176,7 @@ std::bitset<BITFLAG_SIZE> setValveFlags(const std::array<T, size>& valveArray)
     return valveStatus;
 } */
 
-// this runs the begin method for each sensor
+/* // this runs the begin method for each sensor
 template <std::size_t size>
 void sensorSetUp(const std::array<SENSOR*, size>& sensorArray, uint8_t& nodeID)
 {
@@ -177,6 +199,6 @@ void readSensors(const std::array<SENSOR*, size>& sensorArray, ADC* adc, uint8_t
         }
     }    
 }
-
+ */
 
 #endif
