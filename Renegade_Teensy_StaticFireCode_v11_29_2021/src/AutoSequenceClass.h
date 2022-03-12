@@ -10,7 +10,7 @@ class AutoSequence
 
     private:
         uint32_t countdownStart;        //must be set in Micros so it matches the timer
-        int64_t currentCountdown;
+        int32_t currentCountdown;
         elapsedMicros timer;
         AutoSequenceState state;
         uint32_t hostNodeID;      // hostNodeID is for assigning the node that is the host of the autosequence, i.e. the node starting the engine should be in charge of ignition autosequence

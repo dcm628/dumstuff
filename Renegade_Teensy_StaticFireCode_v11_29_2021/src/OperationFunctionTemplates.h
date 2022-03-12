@@ -3,10 +3,7 @@
 
 //#define BITFLAG_SIZE 16
 
-//#include "ValveClass.h"
-//#include "PyroClass.h"
-//#include "SensorClass.h"
-//#include "AutoSequence.h"
+
 #include <array>
 #include <bitset>
 #include <FlexCAN.h>
@@ -130,19 +127,27 @@ void autoSequenceSetUp(const std::array<T, size>& autoSequenceArray)
 }
 
 template <typename T, std::size_t size>
-void autoSequenceDeviceUpdate(const std::array<T, size>& autoSequenceArray, const std::array<T, size>& pyroArray, const std::array<T, size>& valveArray)
+void autoSequenceDeviceUpdate(const std::array<T, size>& valveArray, int32_t& fireCurrentCountdown)
 {
-    // iterate through valve array and run the stateOperations method
+/*     // iterate through valve array and run the stateOperations method
     for(auto pyro : pyroArray)
     {
         
-        //autoSequence->begin();
-        //Serial.print("LoopRan");
+        
+        
     }
-    
+     */
     for (auto valve : valveArray)
     {
-
+        //if ( valve->getState() == FireCommanded)    //whycpus. lemme have fire commanded. But also do I care about efficiency of not updating this on every valve? It won't hurt anything to update Fire commanded to true on stuff that doesn't get told firecommanded
+        //{
+            if (fireCurrentCountdown >= valve->getFireSequenceTime())
+            {
+                valve->setFireCommandBool(true);
+            }
+            
+        //}
+        
     }
 
 

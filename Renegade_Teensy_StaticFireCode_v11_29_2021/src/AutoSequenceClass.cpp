@@ -38,7 +38,7 @@ void AutoSequence::stateOperations()
         //{
             countdownStart = getCountdownStart();
             timer = getTimer();
-            currentCountdown = countdownStart - timer;
+            currentCountdown = timer - countdownStart;  //countdownstart is stored as unsigned and treated as negative here in the math
             setCurrentCountdown(currentCountdown);
         //}
         break;

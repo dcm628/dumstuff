@@ -2,8 +2,8 @@
 #include <Arduino.h>
 
 
-Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, bool setFireCommandBool, uint8_t setHoldDuty)
-                : valveID{setValveID}, valveNodeID{setValveNodeID}, valveType{setValveType}, pin{setPin}, fullDutyTime{setFullDutyTime}, fireCommandBool{setFireCommandBool}, holdDuty{setHoldDuty}
+Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, bool setFireCommandBool, int32_t setFireSequenceTime, uint8_t setHoldDuty)
+                : valveID{setValveID}, valveNodeID{setValveNodeID}, valveType{setValveType}, pin{setPin}, fullDutyTime{setFullDutyTime}, fireCommandBool{setFireCommandBool}, fireSequenceTime{setFireSequenceTime}, holdDuty{setHoldDuty}
 {
     switch (valveType)
     {
@@ -55,7 +55,8 @@ void Valve::stateOperations()
     case ValveState::FireCommanded:
         
      //if (IgnitionAutoSequence.getCurrentCountdown() >= fireSequenceTime)
-        if (AutoSequenceCompare >= fireSequenceTime)
+        //if (AutoSequenceCompare >= fireSequenceTime)
+        if (fireCommandBool)
         {
             switch (valveType)
             {

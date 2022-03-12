@@ -84,6 +84,9 @@ Command currentCommand{command_NOCOMMAND};
 State currentState{State::passive};
 State priorState;
 
+//AutoSequence stuff for main
+int32_t currentCountdownForMain;
+
 // Set EEPROM address for storing states
 uint8_t stateAddress{0};
 
@@ -348,10 +351,16 @@ void loop()
   haltFlagCheck(abortHaltFlag, valveArray, pyroArray, valveEnableArray);
 
   // -----Advance needed propulsion system tasks (valve, valve enables, pyro, autosequences) -----
+  autoSequenceTasks(autoSequenceArray,nodeID);
+  currentCountdownForMain = IgnitionAutoSequence.getCurrentCountdown();
+  autoSequenceDeviceUpdate(valveArray, currentCountdownForMain);  
   valveTasks(valveArray, nodeID);
   valveEnableTasks(valveEnableArray, nodeID);
   pyroTasks(pyroArray, nodeID);
-  autoSequenceTasks(autoSequenceArray,nodeID);
+  
+  
+  
+
 
 /*     Serial.print("abortHaltFlag: ");
     Serial.println(abortHaltFlag); */
