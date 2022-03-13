@@ -27,6 +27,7 @@ using std::string;
 /* #include <TimeLib.h>
 #include <DS1307RTC.h>  */
 
+uint8_t fakeCANmsg;
 
 bool abortHaltFlag; //creates halt flag
 
@@ -148,7 +149,7 @@ void setup() {
   } else {
     nodeID = 3;
   } */
-  nodeID = 3;
+  nodeID = 2;
   startup = true;
 
   // ----- Hardware Abort Pin Setup ----- NOT CURRENTLY IN USE
@@ -341,6 +342,30 @@ void loop()
     Serial.println(currentCommand);
   }
 
+  while (Serial.available()) 
+    {
+    fakeCANmsg = Serial.read();
+      if(fakeCANmsg  < command_SIZE) //enter 0 inter serial to trigger command read
+      {
+          //add in code here to prompt for command code and update current command from this
+          //Serial.println("Enter Command Byte");
+          //CurrentCommand = Serial.read();
+
+              
+              //if(fakeCANmsg < command_SIZE)                                           // this checks if the message at that location in the buffer could be a valid command
+              //{
+                  currentCommand = static_cast<Command>(fakeCANmsg);
+              //}
+
+
+          Serial.println("Command Entered");
+                
+
+        }
+    }
+
+
+
   // -----Process Commands Here-----
   //currentCommand = command_vent;    //TESTING COMMAND INPUT ONLY
   commandExecute(currentState, priorState, currentCommand, valveArray, pyroArray, valveEnableArray, autoSequenceArray, abortHaltFlag);
@@ -419,8 +444,8 @@ void loop()
         }  
     }
   
-  //CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
-  //CAN2AutosequenceTimerReport(Can0, autoSequenceArray, abortHaltFlag, nodeID);
+  CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
+  CAN2AutosequenceTimerReport(Can0, autoSequenceArray, abortHaltFlag, nodeID);
 
   Serial.print("currentState :");
   Serial.println(static_cast<uint8_t>(currentState));

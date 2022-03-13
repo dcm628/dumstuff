@@ -12,8 +12,8 @@
 // On Engine Node
 Valve HiPress{16, 2, NormalClosed, 2, 25000, false};
 Valve HiPressVent{17, 2, NormalClosed, 5, 25000, false};
-Valve LoxMV{27, 2, NormalClosed, 7, 25000, true, -1, 50};
-Valve FuelMV{26, 2, NormalClosed, 6, 25000, true, -1, 50};
+Valve LoxMV{24, 2, NormalClosed, 7, 25000, false, -1, 50};
+Valve FuelMV{25, 2, NormalClosed, 6, 25000, false, -1, 50};
 // On Prop Node
 Valve LoxVent{18, 3, NormalOpen, 2, 500000, false, 166};    // 9, 166   old values - 166 is full duty cycle but what the hell was 9?
 Valve LoxDomeReg{19, 3, NormalClosed, 5, 25000, false};

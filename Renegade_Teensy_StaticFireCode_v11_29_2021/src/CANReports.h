@@ -55,34 +55,36 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
 
     //Valve State information bytes
     uint8_t canByte = 1;    //starts the valve state bytes skipping 1 byte(s) first
-    while (canByte < 7)     //to limit overflow of CAN2.0 max message bytes
-    {
+         //to limit overflow of CAN2.0 max message bytes
+    
     
         // iterate through valve array 
         for(auto valve : valveArray)
         {
-    
-            if (valve->getValveNodeID() == nodeID)
-            {
-            uint8_t valveID = static_cast<uint8_t>(valve->getValveID());    
-            uint8_t ValveStateEnumToInt = static_cast<uint8_t>(valve->getState());
-            uint8_t ShiftedValveStateEnumToInt = (ValveStateEnumToInt<<5);
-            
-            msgOut.buf[canByte] = valveID + ShiftedValveStateEnumToInt;
-            Serial.println("ValveID: ");
-            Serial.print(valveID);
-            Serial.print( ": ValveState: ");
-            Serial.print(ValveStateEnumToInt);
-            Serial.print(": ");
-            Serial.print(ShiftedValveStateEnumToInt);
-            Serial.print(": ");
-            Serial.println(canByte);
-            canByte++;
-            }
-        
+            //while (canByte < 7)
+            //{
+                if (valve->getValveNodeID() == nodeID)
+                {
+                uint8_t valveID = static_cast<uint8_t>(valve->getValveID());    
+                uint8_t ValveStateEnumToInt = static_cast<uint8_t>(valve->getState());
+                uint8_t ShiftedValveStateEnumToInt = (ValveStateEnumToInt<<5);
+                
+                msgOut.buf[canByte] = valveID + ShiftedValveStateEnumToInt;
+                Serial.print("ValveID: ");
+                Serial.print(valveID);
+                Serial.print( ": ValveState: ");
+                Serial.print(ValveStateEnumToInt);
+                Serial.print(": ");
+                //Serial.print(ShiftedValveStateEnumToInt);
+                //Serial.print("CANbyte: ");
+                Serial.println(canByte);
+                canByte++;
+                }
+            //canByte++;
+            //}
         }
 
-    }
+    
     
     // write message to bus
     Serial.print("ID: ");
@@ -113,7 +115,7 @@ void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*
     {
         msgOut.id = nodeID + 16;  // with 16 possible nodes in ID format this makes the CAN ID possible go up to 31, lowest sensor ID in current format is 50.
 
-        int32_t autosequenceTimer = autoSequence->getCurrentCountdown();
+        int64_t autosequenceTimer = autoSequence->getCurrentCountdown();
         uint8_t autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getAutoSequenceState());
 
 
@@ -124,9 +126,18 @@ void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*
         msgOut.buf[2] = (autosequenceTimer >> 8);
         msgOut.buf[3] = (autosequenceTimer >> 16);
         msgOut.buf[4] = (autosequenceTimer >> 24);
+        msgOut.buf[5] = (autosequenceTimer >> 32);
+        msgOut.buf[6] = (autosequenceTimer >> 40);
+        msgOut.buf[7] = (autosequenceTimer >> 48);
+          
     
     
         // write message to bus
+        Serial.print("Autosequence: State : ");
+        Serial.print(autosequenceTimerStateEnumToInt);
+        Serial.print("Timer : ");
+        Serial.print(autosequenceTimer);
+        Serial.println();
         CANbus.write(msgOut);
         {
             // add write error handling here, for now it does nothing

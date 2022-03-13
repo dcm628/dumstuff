@@ -9,8 +9,8 @@ class AutoSequence
 {
 
     private:
-        uint32_t countdownStart;        //must be set in Micros so it matches the timer
-        int32_t currentCountdown;
+        int32_t countdownStart;        //must be set in Micros so it matches the timer
+        int64_t currentCountdown;
         elapsedMicros timer;
         AutoSequenceState state;
         uint32_t hostNodeID;      // hostNodeID is for assigning the node that is the host of the autosequence, i.e. the node starting the engine should be in charge of ignition autosequence
@@ -18,14 +18,14 @@ class AutoSequence
     public:
 
     // constructor    
-        AutoSequence(uint32_t setCountdownStart, uint32_t setHostNodeID);
+        AutoSequence(int32_t setCountdownStart, uint32_t setHostNodeID);
 
     // a start up method,
         void begin();
 
     // get functions, return the current value of that variable
-        uint32_t getCountdownStart(){return countdownStart;}
-        int32_t getCurrentCountdown(){return currentCountdown;}
+        int32_t getCountdownStart(){return countdownStart;}
+        int64_t getCurrentCountdown(){return currentCountdown;}
         AutoSequenceState getAutoSequenceState(){return state;}
         uint32_t getHostNodeID(){return hostNodeID;}
         int getTimer(){return timer;}

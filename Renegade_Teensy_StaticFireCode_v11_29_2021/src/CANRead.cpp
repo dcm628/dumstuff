@@ -19,6 +19,9 @@ bool CANread(FlexCAN& CANbus, Command& CurrentCommand)
     // create a variable to hold the current message
     CAN_message_t msg {};
 
+    // create a variable to hold serial input fake CAN command
+    //uint8_t fakeCANmsg;
+
     // check if new message in the mailbox
     if(CANbus.available())
     {
@@ -62,6 +65,35 @@ bool CANread(FlexCAN& CANbus, Command& CurrentCommand)
 
     // at this point the mailbox has been checked, any waiting messages have been moved to the buffer, and the oldest command has been moved into the global CurrentCommand variable
     // return the message read bool
+    
+    // Adding setup to use serial input to put artificial CAN commands in
+    // Upgrade this to be toggled on/off from main?
+/*     while (Serial.available()) 
+    {
+        if(Serial.read() == 0) //enter 0 inter serial to trigger command read
+        {
+            //add in code here to prompt for command code and update current command from this
+            Serial.println("Enter Command Byte");
+            //CurrentCommand = Serial.read();
+
+                    fakeCANmsg = Serial.read();
+                    if(fakeCANmsg < command_SIZE)                                           // this checks if the message at that location in the buffer could be a valid command
+                    {
+                        // convert message to a Command type and save it to the buffer
+                        CommandBuffer.at(CommandBufferIndex) = static_cast<Command>(fakeCANmsg);
+                        ++CommandBufferIndex;                                                   // increment buffer index
+                    }
+
+
+            Serial.println("Command Entered");
+                
+                //return;
+        }
+    } */
+    
+    
+    
+    
     return NewMessage;
 
 }

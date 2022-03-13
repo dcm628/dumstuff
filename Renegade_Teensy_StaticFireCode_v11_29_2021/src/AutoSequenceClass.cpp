@@ -2,15 +2,17 @@
 //#include "AutoSequenceStates.h"
 #include <Arduino.h>
 
+//int64_t maxcountdownint = 36028797018963968; //7 byte (56 bit) signed int max value, this is to stay inside 7 CAN bytes
 
-AutoSequence::AutoSequence(uint32_t setCountdownStart, uint32_t setHostNodeID) : countdownStart{setCountdownStart}, hostNodeID{setHostNodeID}
+
+AutoSequence::AutoSequence(int32_t setCountdownStart, uint32_t setHostNodeID) : countdownStart{setCountdownStart}, hostNodeID{setHostNodeID}
 {
 
 }
 
 void AutoSequence::begin()
 {
-    //AutoSequenceState::Standby;
+    
 }
 
 
@@ -21,6 +23,7 @@ void AutoSequence::stateOperations()
     {
     case AutoSequenceState::Standby:
         
+        setCurrentCountdown(countdownStart);
         break;
 
     
@@ -38,8 +41,8 @@ void AutoSequence::stateOperations()
         //{
             countdownStart = getCountdownStart();
             timer = getTimer();
-            currentCountdown = timer - countdownStart;  //countdownstart is stored as unsigned and treated as negative here in the math
-            setCurrentCountdown(currentCountdown);
+            currentCountdown = timer + countdownStart;
+            setCurrentCountdown(currentCountdown);   
         //}
         break;
 
