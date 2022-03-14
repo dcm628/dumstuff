@@ -23,7 +23,8 @@ void AutoSequence::stateOperations()
     {
     case AutoSequenceState::Standby:
         
-        setCurrentCountdown(countdownStart);
+        //setCurrentCountdown(countdownStart);
+        setCurrentCountdown(0);
         break;
 
     
@@ -42,6 +43,8 @@ void AutoSequence::stateOperations()
             countdownStart = getCountdownStart();
             timer = getTimer();
             currentCountdown = timer + countdownStart;
+            //Serial.print("currentCountdown from StateOps");
+            //Serial.println(currentCountdown);
             setCurrentCountdown(currentCountdown);   
         //}
         break;

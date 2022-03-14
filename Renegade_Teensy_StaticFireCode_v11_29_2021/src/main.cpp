@@ -1,3 +1,8 @@
+// RocketDriver Propulsion Control and Data Acquisition - Embedded System Node Program
+// Originally by Dan Morgan and Mat Arnold
+// For Renegade, Pasafire, Beach Launch Team, and more
+//
+//
 
 #include <Arduino.h>
 #include <EEPROM.h>
@@ -19,14 +24,15 @@ using std::string;
 #include "CANReports.h"
 #include "OperationFunctionTemplates.h"
 #include "pinList.h"
-//#include "ControlFunctions.h"
 #include "ValveDefinitions.h"
 #include "PyroDefinitions.h"
 #include "AutoSequenceDefinitions.h"
 
+//Trying to figure out RTC stuff with these libs
 /* #include <TimeLib.h>
-#include <DS1307RTC.h>  */
+#include <DS1307RTC.h> */
 
+//For use in doing serial inputs as CAN commands for testing
 uint8_t fakeCANmsg;
 
 bool abortHaltFlag; //creates halt flag
@@ -69,14 +75,14 @@ CAN_message_t extended;
 int value = 0;
 //int pin = 0;
 int counter = 0;
-int MCUtempPIN = 70;  //??
+int MCUtempPIN = 70;  //?? Not sure, I was trying to figure out how to read direct from the non Teensy MCU pin
 int MCUtempraw;
 int MCUtempCANID = 100; 
 
 int busSpeed0 = 500000; //baudrate
 int busSpeed1 = 500000; //baudrate
 
-bool startup{true}; // is this the first loop?
+bool startup{true}; // bool for storing if this is the first loop on startup
 
 uint32_t loopCount {0};// for debugging
 
@@ -86,7 +92,7 @@ State currentState{State::passive};
 State priorState;
 
 //AutoSequence stuff for main
-int32_t currentCountdownForMain;
+int64_t currentCountdownForMain;
 
 // Set EEPROM address for storing states
 uint8_t stateAddress{0};
@@ -123,7 +129,7 @@ int roundedtemp;
 
 
 // -------------------------------------------------------------
-// abort reset function
+// abort reset function -- NOT TESTED IN CURRENT VERSION, needs to be worked on
 void abortReset()
 {
   cli();
@@ -139,7 +145,8 @@ void abortReset()
 void setup() {
   
   //Read pin 28 as digital input, if pulled high this is node 2, if pulled low it's node 3
-    
+  //I would like to write this into EEPROM and check on startup with state to make this not able to flip on a power cycle mid test/launch and cutout the setup time
+
     pinMode(pin::NodeAddress0, INPUT);
     pinMode(pin::NodeAddress1, INPUT);
     pinMode(pin::NodeAddress2, INPUT);
@@ -158,7 +165,7 @@ void setup() {
   pinMode(pin::abort, INPUT_PULLDOWN);
   attachInterrupt(digitalPinToInterrupt(pin::abort), abortReset, RISING);  */
 
-  // ----- Safety Pin Setup -----
+/*   // ----- Safety Pin Setup ----- // Should not be required anymore - state operations for valve enables should do it
   if (nodeID == 2) //Engine Node
     {
     pinMode(pin::HiPressHiVentSafe, OUTPUT);
@@ -176,7 +183,7 @@ void setup() {
     //digitalWrite(27, 1);
     //digitalWrite(24, 1);
     }
-
+ */
 
 
 
@@ -263,14 +270,14 @@ void setup() {
   // reference can be ADC_REFERENCE::REF_3V3, ADC_REFERENCE::REF_1V2 or ADC_REFERENCE::REF_EXT.
   //adc->setReference(ADC_REFERENCE::REF_1V2, ADC_0); // change all 3.3 to 1.2 if you change the reference to 1V2
 
-  adc->adc0->setAveraging(32);                                    // set number of averages
+  adc->adc0->setAveraging(8);                                    // set number of averages
   adc->adc0->setResolution(16);                                   // set bits of resolution
   adc->adc0->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED_16BITS); // change the conversion speed
   adc->adc0->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);     // change the sampling speed
   //adc->adc0->recalibrate();
 
 ///// ADC1 /////
-  adc->adc1->setAveraging(32);                                    // set number of averages
+  adc->adc1->setAveraging(8);                                    // set number of averages
   adc->adc1->setResolution(16);                                   // set bits of resolution
   adc->adc1->setConversionSpeed(ADC_CONVERSION_SPEED::HIGH_SPEED_16BITS); // change the conversion speed
   adc->adc1->setSamplingSpeed(ADC_SAMPLING_SPEED::HIGH_SPEED);     // change the sampling speed
@@ -378,7 +385,8 @@ void loop()
   // -----Advance needed propulsion system tasks (valve, valve enables, pyro, autosequences) -----
   autoSequenceTasks(autoSequenceArray,nodeID);
   currentCountdownForMain = IgnitionAutoSequence.getCurrentCountdown();
-  autoSequenceDeviceUpdate(valveArray, currentCountdownForMain);  
+  autoSequenceValveUpdate(valveArray, currentCountdownForMain);
+  autoSequencePyroUpdate(pyroArray, currentCountdownForMain);  
   valveTasks(valveArray, nodeID);
   valveEnableTasks(valveEnableArray, nodeID);
   pyroTasks(pyroArray, nodeID);
@@ -444,17 +452,16 @@ void loop()
         }  
     }
   
+  //CAN State Report Functions
   CAN2PropSystemStateReport(Can0, currentState, currentCommand, valveArray, pyroArray, valveEnableArray, abortHaltFlag, nodeID);
   CAN2AutosequenceTimerReport(Can0, autoSequenceArray, abortHaltFlag, nodeID);
 
+  //Main Loop state and command print statements - for testing only
   Serial.print("currentState :");
   Serial.println(static_cast<uint8_t>(currentState));
   Serial.print("currentCommand :");
   Serial.println(currentCommand);
-  
-  
-  
-  
+
   
   sinceRead1 = 0; //resets timer to zero each time the ADC is read
   }

@@ -127,34 +127,31 @@ void autoSequenceSetUp(const std::array<T, size>& autoSequenceArray)
 }
 
 template <typename T, std::size_t size>
-void autoSequenceDeviceUpdate(const std::array<T, size>& valveArray, int32_t& fireCurrentCountdown)
+void autoSequenceValveUpdate(const std::array<T, size>& valveArray, int64_t& fireCurrentCountdown)
 {
-/*     // iterate through valve array and run the stateOperations method
-    for(auto pyro : pyroArray)
-    {
-        
-        
-        
-    }
-     */
+    // iterate through valve array and run the stateOperations method
     for (auto valve : valveArray)
     {
-        //if ( valve->getState() == FireCommanded)    //whycpus. lemme have fire commanded. But also do I care about efficiency of not updating this on every valve? It won't hurt anything to update Fire commanded to true on stuff that doesn't get told firecommanded
-        //{
-            if (fireCurrentCountdown >= valve->getFireSequenceTime())
-            {
-                valve->setFireCommandBool(true);
-            }
-            
-        //}
-        
+        if (fireCurrentCountdown >= valve->getFireSequenceTime())
+        {
+            valve->setFireCommandBool(true);
+        }    
     }
-
-
-
-
 }
 
+template <typename T, std::size_t size>
+void autoSequencePyroUpdate(const std::array<T, size>& pyroArray, int64_t& fireCurrentCountdown)
+{
+    // iterate through pyro array and run the stateOperations method
+    for(auto pyro : pyroArray)
+    {
+        if (fireCurrentCountdown >= pyro->getFireSequenceTime())
+        {
+            pyro->setFireCommandBool(true);
+        }        
+    }
+
+}
 
 /* // This function outputs a bitset contianing flags about the valve status, to be sent back to the console via CAN
 template <typename T, std::size_t size>

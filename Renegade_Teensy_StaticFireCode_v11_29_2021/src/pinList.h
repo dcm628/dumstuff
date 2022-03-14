@@ -10,20 +10,24 @@ namespace pin
     const int NodeAddress0{0};
     const int NodeAddress1{1};
     const int NodeAddress2{28};
-    
-    // abort interrupt pins
+    //const int NodeAddress3{}; - Need to figure out this pin assignment to get the extra NodeID space
+
+    // abort interrupt pins - Not fully implemented, need to test and check
     const int abort{29};
     const int reset{30};
     
 
+
+
+/*     // Igniter Pins - Node 2 - Engine Node
+    const int Igniter0FireOut{};
+    const int Igniter1FireOut{}; */
+    
+
+    // I DO NEED THIS FOR PINMODE SETUP - For now until I implement a class based pin setup for the enables?
     // safety enable pins - Node 2 - Engine Node
     const int HiPressHiVentSafe{24};
     const int MainValvesSafe{25};
-
-    // Igniter Pins - Node 2 - Engine Node
-    const int Igniter0FireOut{};
-    const int Igniter1FireOut{};
-
 
     // safety enable pins - Node 3 - Prop Node
     const int FuelVentSafe{24};
@@ -31,6 +35,7 @@ namespace pin
     const int FuelDomeRegVentSafe{26};
     const int LoxVentSafe{27};
     
+
 
 };
 

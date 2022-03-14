@@ -10,12 +10,34 @@
 #include "ControlFunctions.h"
 #include <vector>
 
+uint8_t engineNodeValveNum = 4;
+uint8_t propNodeValveNum = 6;
+uint8_t engineNodePyroNum = 2;
+uint8_t propNodePyroNum = 0;
+uint8_t vavleArrayCount;
+uint8_t pyroArrayCount;
 
 // General Level State Report - covers overall state of whole node
 void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& currentCommand, const std::array<Valve*, NUM_VALVES>& valveArray, const std::array<Pyro*, NUM_PYROS>& pyroArray, const std::array<ValveEnable*, NUM_VALVEENABLE>& valveEnableArray, bool & haltFlag, uint8_t nodeID)
 {
-// , int8_t autosequencetimer
-//Serial.println("Do I even run the State Report?");
+//Hardcoded array iterator sizes because I'm not smart enough to fix the auto arrays yet
+if (nodeID == 2)
+{
+    vavleArrayCount = engineNodeValveNum;
+    pyroArrayCount = engineNodePyroNum;
+}
+else if (nodeID == 3)
+{
+    vavleArrayCount = propNodeValveNum;
+    pyroArrayCount = propNodePyroNum;
+}
+else
+{
+    vavleArrayCount = 7;
+    pyroArrayCount = 0;
+}
+
+
 // build message
     static CAN_message_t msgOut;
     msgOut.ext = 0;
@@ -57,12 +79,22 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     uint8_t canByte = 1;    //starts the valve state bytes skipping 1 byte(s) first
          //to limit overflow of CAN2.0 max message bytes
     
-    
+    //while (canByte <=7)
+    //{
+        //while (canByte <=vavleArrayCount) //HARDCODING number of valves on engine node so it doesn't loop
+        //{
+        
+/*         // iterate through valve array - attempting to do it different way
+        for (valveArray)
+        {
+
+        } */
+        
+        
         // iterate through valve array 
         for(auto valve : valveArray)
         {
-            //while (canByte < 7)
-            //{
+            
                 if (valve->getValveNodeID() == nodeID)
                 {
                 uint8_t valveID = static_cast<uint8_t>(valve->getValveID());    
@@ -81,10 +113,31 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
                 canByte++;
                 }
             //canByte++;
-            //}
+            
         }
-
-    
+        //}
+        //while (canByte <=pyroArrayCount) //HARDCODING number of valves on engine node so it doesn't loop
+        //{
+        for(auto pyro : pyroArray)
+        {
+                if (pyro->getPyroNodeID() == nodeID)
+                {
+                uint8_t pyroID = static_cast<uint8_t>(pyro->getPyroID());    
+                uint8_t PyroStateEnumToInt = static_cast<uint8_t>(pyro->getState());
+                uint8_t ShiftedPyroStateEnumToInt = (PyroStateEnumToInt<<5);
+                
+                msgOut.buf[canByte] = pyroID + ShiftedPyroStateEnumToInt;
+                Serial.print("PyroID: ");
+                Serial.print(pyroID);
+                Serial.print( ": PyroState: ");
+                Serial.print(PyroStateEnumToInt);
+                Serial.print(": ");
+                Serial.println(canByte);
+                canByte++;
+                }
+        }
+        //}
+    //}
     
     // write message to bus
     Serial.print("ID: ");
@@ -98,6 +151,7 @@ void CAN2PropSystemStateReport(FlexCAN& CANbus, State& currentState, Command& cu
     Serial.println();
     msgOut.len = 8;
     CANbus.write(msgOut);
+    canByte = 1;
     {
         // add write error handling here, for now it does nothing
     }
@@ -118,10 +172,13 @@ void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*
         int64_t autosequenceTimer = autoSequence->getCurrentCountdown();
         uint8_t autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getAutoSequenceState());
 
+        Serial.print("Autosequence: State : ");
+        Serial.print(autosequenceTimerStateEnumToInt);
+        Serial.print(" Timer : ");
+        Serial.print(autosequenceTimer);
+        Serial.println();
 
-        //int8_t autosequenceTimerState = autoSequence->getAutoSequenceState;
         msgOut.buf[0] = autosequenceTimerStateEnumToInt;
-
         msgOut.buf[1] = autosequenceTimer;
         msgOut.buf[2] = (autosequenceTimer >> 8);
         msgOut.buf[3] = (autosequenceTimer >> 16);
@@ -129,15 +186,8 @@ void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*
         msgOut.buf[5] = (autosequenceTimer >> 32);
         msgOut.buf[6] = (autosequenceTimer >> 40);
         msgOut.buf[7] = (autosequenceTimer >> 48);
-          
-    
-    
+        
         // write message to bus
-        Serial.print("Autosequence: State : ");
-        Serial.print(autosequenceTimerStateEnumToInt);
-        Serial.print("Timer : ");
-        Serial.print(autosequenceTimer);
-        Serial.println();
         CANbus.write(msgOut);
         {
             // add write error handling here, for now it does nothing
@@ -149,7 +199,7 @@ void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*
 
 /* bool CAN2ValveStateReport()
 {
-    int8_t byte0 = 0;
+    
 
 
 

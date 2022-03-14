@@ -21,8 +21,8 @@ Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveTyp
     
 }
 
-ValveEnable::ValveEnable(uint32_t setValveEnablePin, uint32_t setValveEnableNodeID)
-                : valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}
+ValveEnable::ValveEnable(uint32_t setValveEnableID, uint32_t setValveEnablePin, uint32_t setValveEnableNodeID)
+                : valveEnableID{setValveEnableID}, valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}
 {
     
 }

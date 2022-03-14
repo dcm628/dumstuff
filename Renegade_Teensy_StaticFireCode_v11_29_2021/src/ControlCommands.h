@@ -9,8 +9,9 @@ enum Command
 {
     // we reserve 0 to be a no command state
     command_NOCOMMAND = 0,
-    command_debug = 1,                      //Start of global states
+    command_debug = 1,                          //Start of global states
     command_passive = 3,
+    command_test_exit = 4,                      //not implemented yet into state machine
     command_test = 5,
     command_abort = 7,
     command_vent = 9,
@@ -19,10 +20,10 @@ enum Command
     command_TankPressArm = 15,
     commend_TankPressPressurized = 17,
     command_fireArm = 19,
-    command_fire = 21,                      //End of global states
+    command_fire = 21,                          //End of global states
     command_ExitOffNominal = 22,
     command_EnterOffNominal = 23,
-    command_closeHiPress = 32,              //Start of individual device states
+    command_closeHiPress = 32,                  //Start of individual device states
     command_openHiPress = 33,
     command_closeHiPressVent = 34,
     command_openHiPressVent = 35,
@@ -38,22 +39,26 @@ enum Command
     command_openFuelDomeReg = 45,
     command_closeFuelDomeRegVent = 46,
     command_openFuelDomeRegVent = 47,
-    command_closeFuelMV = 48,
-    command_openFuelMV = 49,
-    command_closeLoxMV = 50,
-    command_openLoxMV = 51,                 //End of individual device states
-    command_disableHiPressHiVentSafety = 52,            //Start of safety enables
-    command_enableHiPressHiVentSafety = 53,
-    command_disableFuelVentSafety = 54,
-    command_enableFuelVentSafety = 55,
-    command_disableLoxDomeRegLoxDomeVentSafety = 56,
-    command_enableLoxDomeRegLoxDomeVentSafety = 57,    
-    command_disableFuelDomeRegFuelDomeVentSafety = 58,
-    command_enableFuelDomeRegFuelDomeVentSafety = 59,    
-    command_disableLoxVentSafety = 60,
-    command_enableLoxVentSafety = 61,
-    command_disableMainValvesSafety = 62,
-    command_enableMainValvesSafety = 63,                //End of safety enables
+    command_closeLoxMV = 48,
+    command_openLoxMV = 49,    
+    command_closeFuelMV = 50,
+    command_openFuelMV = 51,
+    command_engineIgniterPyro1_Off = 52,
+    command_engineIgniterPyro1_On = 53,
+    command_engineIgniterPyro2_Off = 54,
+    command_engineIgniterPyro2_On = 55,                         //End of individual device states
+    command_disableHiPressHiVentSafety = 64,            //Start of safety enables
+    command_enableHiPressHiVentSafety = 65,
+    command_disableFuelVentSafety = 66,
+    command_enableFuelVentSafety = 67,
+    command_disableLoxDomeRegLoxDomeVentSafety = 68,
+    command_enableLoxDomeRegLoxDomeVentSafety = 69,    
+    command_disableFuelDomeRegFuelDomeVentSafety = 70,
+    command_enableFuelDomeRegFuelDomeVentSafety = 71,    
+    command_disableLoxVentSafety = 72,
+    command_enableLoxVentSafety = 73,
+    command_disableMainValvesSafety = 74,
+    command_enableMainValvesSafety = 75,                //End of safety enables
     command_SIZE, // not a valid command but it is useful for checking if recieved messages are valid commands, see CANRead. Always leave this at the end of the enum listcomm
 };
 

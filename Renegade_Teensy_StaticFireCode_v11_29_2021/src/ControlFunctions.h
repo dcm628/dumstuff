@@ -18,7 +18,11 @@
 #define NUM_VALVEENABLE 6
 #define NUM_PYROS 2
 #define NUM_AUTOSEQUENCES 1
-
+/* 
+//Pasafire Define Numbers Only Here - Uncomment these and comment out BLT ones
+#define NUM_VALVES 6
+#define NUM_VALVEENABLE 4
+ */
 
 // checks the state that was set at start-up and issues the appropriate command as current command
 void startupStateCheck(const State& currentState, Command& currentCommand);

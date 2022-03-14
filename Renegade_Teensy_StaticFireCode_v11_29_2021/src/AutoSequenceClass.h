@@ -28,7 +28,7 @@ class AutoSequence
         int64_t getCurrentCountdown(){return currentCountdown;}
         AutoSequenceState getAutoSequenceState(){return state;}
         uint32_t getHostNodeID(){return hostNodeID;}
-        int getTimer(){return timer;}
+        uint32_t getTimer(){return timer;}
 
     // set functions, allows the setting of a variable
         //void setCountdownStart() {countdownStart;} //function to set a given autosequence countdown timer value
