@@ -132,6 +132,10 @@ void autoSequenceValveUpdate(const std::array<T, size>& valveArray, int64_t& fir
     // iterate through valve array and run the stateOperations method
     for (auto valve : valveArray)
     {
+        if (valve->getState() != (ValveState::FireCommanded))
+        {
+            valve->setFireCommandBool(false);
+        }        
         if (fireCurrentCountdown >= valve->getFireSequenceTime())
         {
             valve->setFireCommandBool(true);
@@ -145,10 +149,15 @@ void autoSequencePyroUpdate(const std::array<T, size>& pyroArray, int64_t& fireC
     // iterate through pyro array and run the stateOperations method
     for(auto pyro : pyroArray)
     {
+        if (pyro->getState() != (PyroState::FireCommanded))
+        {
+            pyro->setFireCommandBool(false);
+        }
         if (fireCurrentCountdown >= pyro->getFireSequenceTime())
         {
             pyro->setFireCommandBool(true);
-        }        
+        }
+        
     }
 
 }

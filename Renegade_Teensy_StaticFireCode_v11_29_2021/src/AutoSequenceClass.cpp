@@ -23,8 +23,8 @@ void AutoSequence::stateOperations()
     {
     case AutoSequenceState::Standby:
         
-        //setCurrentCountdown(countdownStart);
-        setCurrentCountdown(0);
+        setCurrentCountdown(countdownStart);
+        //setCurrentCountdown(0);
         break;
 
     
@@ -41,11 +41,16 @@ void AutoSequence::stateOperations()
         //if (hostNodeID = nodeID)
         //{
             countdownStart = getCountdownStart();
+            //Serial.print("CountdownStart from StateOps : ");
+            //Serial.print(countdownStart);
             timer = getTimer();
-            currentCountdown = timer + countdownStart;
-            //Serial.print("currentCountdown from StateOps");
+            signedTimer = (signed int)timer;
+            //Serial.print(" timer : ");
+            //Serial.print(timer);
+            currentCountdown = signedTimer + countdownStart;
+            //Serial.print("currentCountdown");
             //Serial.println(currentCountdown);
-            setCurrentCountdown(currentCountdown);   
+            //setCurrentCountdown(currentCountdown);
         //}
         break;
 
