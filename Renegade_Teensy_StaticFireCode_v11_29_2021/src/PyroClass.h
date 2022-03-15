@@ -18,20 +18,21 @@ class Pyro
     private:
         const uint32_t pyroID;
         const uint32_t pyroNodeID;
-        const int firePin;
-        //const int shuntPin;
-        //const int contCheckPin;
+        const uint8_t firePin;
+        //const uint8_t shuntPin;
+        //const uint8_t contCheckPin;
         const PyroType pyroType;
-        //const int clonedPyroID;
-        const uint32_t fireDelay;
+        //const uint8_t clonedPyroID;
+        const int32_t fireSequenceTime;             // Time to wait until actuation after fire command given, in MICROS
         elapsedMicros timer;
         PyroState state;
         const uint32_t liveOutTime;
+        bool fireCommandBool;             // Whether this valve is on the Ignition AutoSequence for FireCommand timer check
 
     public:
     
     // constructor, define the valve ID here, and the pin that controls the valve, setFireDelay is only parameter that can be left blank
-        Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, int setFirePin, uint32_t setFireDelay, uint32_t setLiveOutTime); 
+        Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, uint8_t setFirePin, uint32_t setLiveOutTime, bool setFireCommandBool, int32_t setFireSequenceTime = 2147483648); 
     // Alternate constructor with future full implementation, needs the clonedpyro features still
     //    Pyro(int setPyroID, int setPyroNodeID, int setFirePin, int setShuntPin, int setContPin, uint32_t setFireDelay = 0);
 
@@ -48,12 +49,16 @@ class Pyro
         //uint32_t getshuntPin(){return shuntPin;}
         //uint32_t getContPin(){return contCheckPin;}        
         uint32_t getLiveOutTime(){return liveOutTime;}
-        uint32_t getFireDelay(){return fireDelay;}
+        int32_t getFireSequenceTime(){return fireSequenceTime;}
         PyroState getState(){return state;}
         uint32_t getTimer(){return timer;}
+        bool getFireCommandBool(){return fireCommandBool;}
 
     // set functions, allows the setting of a variable
         void setState(PyroState newState) {state = newState; timer = 0;} //every time a state is set, the timer should reset
+    
+    // set the Fire Sequence bool function
+        void setFireCommandBool(bool updatedFireCommandBool) {fireCommandBool = updatedFireCommandBool;}
 
     // functions with executables defined in ValveClasses.cpp
         void resetTimer();              // resets timer to zero, timer increments automatically in microseconds
