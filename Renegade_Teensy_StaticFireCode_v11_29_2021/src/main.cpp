@@ -156,7 +156,7 @@ void setup() {
   } else {
     nodeID = 3;
   } */
-  nodeID = 2;
+  nodeID = 3;
   startup = true;
 
   // ----- Hardware Abort Pin Setup ----- NOT CURRENTLY IN USE

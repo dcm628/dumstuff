@@ -47,24 +47,26 @@ else
     int8_t currentStateEnumToInt = static_cast<int8_t>(currentState);
     //Serial.print("static cast of StateEnumToInt: ");
     //Serial.println(currentStateEnumToInt);
-    bool ValveSafetyEnableStateArray[3] ={};
+    bool ValveSafetyEnableStateArray[4] ={};
     uint8_t ShiftedValveSafetyEnableStateArray = 0;
+    uint8_t EnableArrayBit = 0;    //for the valve enable iterator
 
     // iterate through valveEnable array and get states for state report
     for(auto valveEnable : valveEnableArray)
     {
         if (valveEnable->getValveEnableNodeID() == nodeID)
         {    
-            for (size_t i = 0; i < 3; i++) //I need to add something for sizes less than 3 so it doesn't bug out
-            {
+            //for (size_t i = 0; i < 3; i++) //I need to add something for sizes less than 3 so it doesn't bug out
+            //{
             bool ValveEnableEnumToBool = static_cast<bool>(valveEnable->getState());
-            ValveSafetyEnableStateArray[i] = ValveEnableEnumToBool;
-            }
+            ValveSafetyEnableStateArray[EnableArrayBit] = ValveEnableEnumToBool;
+            EnableArrayBit++;
+            //}
         }        
     }
 
     //bitshifting array
-    for (size_t i = 0; i < 3; i++)
+    for (size_t i = 0; i < 4; i++)
     {
     uint8_t bitShiftNumber = 4 + i;
     uint8_t loopyboi = (ValveSafetyEnableStateArray[i])<<bitShiftNumber;

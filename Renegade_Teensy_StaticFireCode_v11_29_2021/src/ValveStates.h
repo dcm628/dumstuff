@@ -13,7 +13,9 @@ enum class ValveState
     CloseCommanded,     // 4
     OpenProcess,        // 5
     CloseProcess,       // 6
-    ValveState_SIZE,    // 7
+    ThrottleCommanded,  // 7    
+    ThrottleProcess,    // 8    //Current State report format can't fit more than 8 states and this would overflow
+    ValveState_SIZE,    // 9
 };
 
 enum class ValveEnableState

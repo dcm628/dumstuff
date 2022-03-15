@@ -14,9 +14,9 @@
 #include "AutoSequenceDefinitions.h" */
 
 
-#define NUM_VALVES 10
-#define NUM_VALVEENABLE 6
-#define NUM_PYROS 2
+#define NUM_VALVES 16
+#define NUM_VALVEENABLE 10
+#define NUM_PYROS 4
 #define NUM_AUTOSEQUENCES 1
 /* 
 //Pasafire Define Numbers Only Here - Uncomment these and comment out BLT ones
