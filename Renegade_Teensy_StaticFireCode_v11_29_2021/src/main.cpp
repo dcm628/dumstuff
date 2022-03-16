@@ -46,10 +46,10 @@ bool nodeIDdetermine = 0;   //boolean flag for if startup is to run the nodeID d
 
 ///// ADC /////
 ADC* adc = new ADC();
-#define PINS 23 //full size is 25, but using pins for A18 and A19 for I2C bus
+#define PINS 21 //full size is 25, but using pins for A18 and A19 for I2C bus
 #define PINS_DIFF 4
 uint8_t adc_pins[] = {A0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10,
-                      A11, A12, A13, A14, A15, A16, A17, A20, A21, A22, A23, A24};
+                      A11, A12, A13, A14, A15, A20, A21, A22, A23, A24};
 uint8_t adc_pins_diff[2][2] = {{A10, A12}, {A11, A13}};
 
 
@@ -196,7 +196,7 @@ void setup() {
   } else {
     nodeID = 3;
   } */
-  nodeID = 3;       //For manually assigning NodeID isntead of the address read, make sure to comment out for operational use
+  nodeID = 2;       //For manually assigning NodeID isntead of the address read, make sure to comment out for operational use
   startup = true;   // Necessary to set startup to true for the code loop so it does one startup loop for the state machine before entering regular loop behavior
 
   // ----- Hardware Abort Pin Setup ----- NOT CURRENTLY IN USE
@@ -209,7 +209,7 @@ void setup() {
   // ----- Safety Pin Setup ----- // Should not be required anymore - state operations for valve enables should do it
   if (nodeID == 2) //Engine Node
     {
-    pinMode(pin::HiPressHiVentSafe, OUTPUT);
+/*     pinMode(pin::HiPressHiVentSafe, OUTPUT);
     pinMode(pin::MainValvesSafe, OUTPUT);
     //digitalWrite(24, 1);
     //digitalWrite(25, 1);
@@ -218,7 +218,7 @@ void setup() {
     pinMode(pin::LoxDomeRegVentSafe, OUTPUT);
     pinMode(pin::FuelDomeRegVentSafe, OUTPUT);
     pinMode(pin::LoxVentSafe, OUTPUT);
-    pinMode(pin::FuelVentSafe, OUTPUT);
+    pinMode(pin::FuelVentSafe, OUTPUT); */
 /*     digitalWrite(25, 1);
     digitalWrite(26, 1);
     digitalWrite(27, 1);
@@ -333,8 +333,8 @@ void setup() {
 
 
 ///// Temp Sensor for TC Cold Junction /////
-Wire.setSDA(38);
-Wire.setSCL(37);
+/* Wire.setSDA(38);
+Wire.setSCL(37); */
 
 /* if(!tempsensor.begin(0x19))
 {
@@ -614,9 +614,9 @@ startup = false;
 /* digitalWrite(25, 1);
 digitalWrite(26, 1);
 digitalWrite(27, 1);
-digitalWrite(24, 1); */
-
-
+digitalWrite(24, 1);
+digitalWrite(35, 1);
+digitalWrite(36, 1); */
 
 
 }

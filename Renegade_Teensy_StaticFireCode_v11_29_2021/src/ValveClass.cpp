@@ -21,7 +21,7 @@ Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveTyp
     
 }
 
-ValveEnable::ValveEnable(uint32_t setValveEnableID, uint32_t setValveEnablePin, uint32_t setValveEnableNodeID)
+ValveEnable::ValveEnable(uint32_t setValveEnableID, uint32_t setValveEnablePin, uint8_t setValveEnableNodeID)
                 : valveEnableID{setValveEnableID}, valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}
 {
     
@@ -153,7 +153,10 @@ void ValveEnable::stateOperations()
 {
     switch (state)
     {
-    
+/*     Serial.print("valveEnableID: ");
+    Serial.print(valveEnableID);
+    Serial.print(" valveEnablePin: ");
+    Serial.println(valveEnablePin); */
         case ValveEnableState::On:
             {
             digitalWrite(valveEnablePin, 1);

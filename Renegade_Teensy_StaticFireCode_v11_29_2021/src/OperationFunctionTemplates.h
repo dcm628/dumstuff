@@ -41,7 +41,13 @@ void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& node
 /*             Serial.println("valve node ID");
             Serial.println(valveEnable->getValveEnableNodeID());
             Serial.print("nodeID");
-            Serial.print(nodeID); */
+            Serial.println(nodeIDReadIn);
+            
+            Serial.print("valveEnableID: ");
+            Serial.print(valveEnable->getValveEnableID());
+            Serial.print(" valveEnablePin: ");
+            Serial.println(valveEnable->getValveEnablePin()); */
+            
             {
             valveEnable->stateOperations();
             //Serial.print("LoopRan");

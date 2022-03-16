@@ -76,14 +76,14 @@ class ValveEnable
 {
     private:
         const uint32_t valveEnableID;                          // Valve Enable ID number 
-        const uint32_t valveEnableNodeID;
+        const uint8_t valveEnableNodeID;
         const uint32_t valveEnablePin;
         ValveEnableState state;
 
     public:
         
     // constructor
-        ValveEnable (uint32_t setValveEnableID,  uint32_t setValveEnablePin, uint32_t setValveEnableNodeID);
+        ValveEnable (uint32_t setValveEnableID,  uint32_t setValveEnablePin, uint8_t setValveEnableNodeID);
 
 
     // a start up method, to set pins from within setup()
@@ -93,7 +93,7 @@ class ValveEnable
     // get functions, return the current value of that variable
         uint32_t getValveEnableID(){return valveEnableID;}
         uint32_t getValveEnableNodeID(){return valveEnableNodeID;}
-        uint32_t getValveEnablePin(){return valveEnablePin;}
+        uint8_t getValveEnablePin(){return valveEnablePin;}
         ValveEnableState getState(){return state;}   
     // set functions, allows the setting of a variable
         void setState(ValveEnableState newState) {state = newState;}

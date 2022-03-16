@@ -47,12 +47,12 @@ void haltFlagCheck(bool & haltFlag, const std::array<Valve*, NUM_VALVES>& valveA
     {
         valveArray.at(8)->setState(ValveState::CloseCommanded);     // Renegade SF Stand MV
         valveArray.at(9)->setState(ValveState::CloseCommanded);     // Renegade SF Stand MV
-        valveArray.at(14)->setState(ValveState::CloseCommanded);    // Pasafire MV
-        valveArray.at(15)->setState(ValveState::CloseCommanded);    // Pasafire MV
+/*         valveArray.at(14)->setState(ValveState::CloseCommanded);    // Pasafire MV
+        valveArray.at(15)->setState(ValveState::CloseCommanded);    // Pasafire MV */
         pyroArray.at(0)->setState(PyroState::OffCommanded);         // Renegade SF Igniter1
         pyroArray.at(1)->setState(PyroState::OffCommanded);         // Renegade SF Igniter2
-        pyroArray.at(2)->setState(PyroState::OffCommanded);         // Pasafire Igniter1
-        pyroArray.at(3)->setState(PyroState::OffCommanded);         // Pasafire Igniter2
+/*         pyroArray.at(2)->setState(PyroState::OffCommanded);         // Pasafire Igniter1
+        pyroArray.at(3)->setState(PyroState::OffCommanded);         // Pasafire Igniter2 */
         valveEnableArray.at(0)->setState(ValveEnableState::Off);    // Renegade SF Stand MV Enable
     }
     
@@ -78,26 +78,26 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(7)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             valveArray.at(8)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
-            valveArray.at(10)->setState(ValveState::CloseCommanded);        // Pasafire
+/*             valveArray.at(10)->setState(ValveState::CloseCommanded);        // Pasafire
             valveArray.at(11)->setState(ValveState::CloseCommanded);        // Pasafire
             valveArray.at(12)->setState(ValveState::CloseCommanded);        // Pasafire
             valveArray.at(13)->setState(ValveState::CloseCommanded);        // Pasafire
             valveArray.at(14)->setState(ValveState::CloseCommanded);        // Pasafire
-            valveArray.at(15)->setState(ValveState::CloseCommanded);        // Pasafire
+            valveArray.at(15)->setState(ValveState::CloseCommanded);        // Pasafire */
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::Off);        // Renegade SF Stand
             valveEnableArray.at(1)->setState(ValveEnableState::Off);        // Renegade SF Stand
             valveEnableArray.at(2)->setState(ValveEnableState::Off);        // Renegade SF Stand
             valveEnableArray.at(3)->setState(ValveEnableState::Off);        // Renegade SF Stand
             valveEnableArray.at(4)->setState(ValveEnableState::Off);        // Renegade SF Stand
             valveEnableArray.at(5)->setState(ValveEnableState::Off);        // Renegade SF Stand
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);  // Global? Not sure how I want to handle multinode autosequence yet
             currentState = State::passive;
             haltFlag = false;
@@ -106,7 +106,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             if(currentState == State::passive)
             {
             currentState = State::test;
-            valveEnableArray.at(0)->setState(ValveEnableState::On);        // Renegade SF Stand
+/*             valveEnableArray.at(0)->setState(ValveEnableState::On);        // Renegade SF Stand
             valveEnableArray.at(1)->setState(ValveEnableState::On);        // Renegade SF Stand
             valveEnableArray.at(2)->setState(ValveEnableState::On);        // Renegade SF Stand
             valveEnableArray.at(3)->setState(ValveEnableState::On);        // Renegade SF Stand
@@ -115,7 +115,7 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveEnableArray.at(6)->setState(ValveEnableState::On);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::On);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::On);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::On);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::On);        // Pasafire */
             }
             break;
         case command_EnterOffNominal:
@@ -158,18 +158,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2            
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::On);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::Off);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Hold);            
             currentState = State::vent;
             break;
@@ -189,18 +189,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2            
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::Off);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::HiPressArm;
             }
@@ -220,18 +220,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2            
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::Off);
             valveEnableArray.at(4)->setState(ValveEnableState::Off);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::HiPressPressurized;
             }
@@ -251,18 +251,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2            
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::TankPressArm;
             }
@@ -282,18 +282,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2            
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::Off);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::TankPressPressurized;
             }
@@ -313,18 +313,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::CloseCommanded);         // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::OffCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::OffCommanded);             // Renegade SF Igniter2         
-            pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::OffCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::OffCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::On);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::Standby);
             currentState = State::fireArmed;
             }
@@ -344,18 +344,18 @@ void commandExecute(State& currentState, State& priorState, Command& currentComm
             valveArray.at(9)->setState(ValveState::FireCommanded);          // Renegade SF Stand
             pyroArray.at(0)->setState(PyroState::FireCommanded);             // Renegade SF Igniter1
             pyroArray.at(1)->setState(PyroState::FireCommanded);             // Renegade SF Igniter2
-            pyroArray.at(2)->setState(PyroState::FireCommanded);             // Pasafire Igniter1
-            pyroArray.at(3)->setState(PyroState::FireCommanded);             // Pasafire Igniter2
+/*             pyroArray.at(2)->setState(PyroState::FireCommanded);             // Pasafire Igniter1
+            pyroArray.at(3)->setState(PyroState::FireCommanded);             // Pasafire Igniter2 */
             valveEnableArray.at(0)->setState(ValveEnableState::On);
             valveEnableArray.at(1)->setState(ValveEnableState::On);
             valveEnableArray.at(2)->setState(ValveEnableState::Off);
             valveEnableArray.at(3)->setState(ValveEnableState::On);
             valveEnableArray.at(4)->setState(ValveEnableState::On);
             valveEnableArray.at(5)->setState(ValveEnableState::On);
-            valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
+/*             valveEnableArray.at(6)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(7)->setState(ValveEnableState::Off);        // Pasafire
             valveEnableArray.at(8)->setState(ValveEnableState::Off);        // Pasafire
-            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire
+            valveEnableArray.at(9)->setState(ValveEnableState::Off);        // Pasafire */
             autoSequenceArray.at(0)->setState(AutoSequenceState::RunCommanded);
             currentState = State::fire;
             }
