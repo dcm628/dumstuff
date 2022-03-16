@@ -170,7 +170,7 @@ void CAN2AutosequenceTimerReport(FlexCAN& CANbus, const std::array<AutoSequence*
     for(auto autoSequence : autoSequenceArray)
     {
         msgOut.id = nodeID + 16;  // with 16 possible nodes in ID format this makes the CAN ID possible go up to 31, lowest sensor ID in current format is 50.
-
+        msgOut.len = 8;
         int64_t autosequenceTimer = autoSequence->getCurrentCountdown();
         uint8_t autosequenceTimerStateEnumToInt = static_cast<uint8_t>(autoSequence->getAutoSequenceState());
 

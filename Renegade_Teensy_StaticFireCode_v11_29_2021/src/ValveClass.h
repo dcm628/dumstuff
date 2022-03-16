@@ -83,7 +83,7 @@ class ValveEnable
     public:
         
     // constructor
-        ValveEnable (uint32_t setValveEnableID, uint32_t setValveEnableNodeID, uint32_t setValveEnablePin);
+        ValveEnable (uint32_t setValveEnableID,  uint32_t setValveEnablePin, uint32_t setValveEnableNodeID);
 
 
     // a start up method, to set pins from within setup()

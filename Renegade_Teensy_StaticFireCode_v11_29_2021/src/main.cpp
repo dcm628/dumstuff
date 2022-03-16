@@ -38,7 +38,11 @@ uint8_t fakeCANmsg;
 bool abortHaltFlag; //creates halt flag
 
 ///// NODE DECLARATION!!!!! /////
-uint8_t nodeID; //engine node = 2, prop node = 3
+//default sets to max nodeID intentionally to be bogus until otherwise set
+uint8_t nodeID;       //engine node = 2, prop node = 3, Pasafire node = 8
+uint8_t nodeIDfromEEPROM;   //nodeID read out of EEPROM
+bool nodeIDdetermine = 0;   //boolean flag for if startup is to run the nodeID detect read
+
 
 ///// ADC /////
 ADC* adc = new ADC();
@@ -138,6 +142,41 @@ void abortReset()
   digitalWrite(pin::reset, 0);                                       // set reset pin low to restart
 }
 
+
+
+
+// -------------------------------------------------------------
+/* void NodeIDDetect(uint8_t nodeID, bool startup, bool nodeIDdetermine, uint8_t nodeIDfromEEPROM)       //Function to run the nodeID hardware addressing
+{
+  if (startup)                          //only on startup assign the pins
+    {
+    pinMode(pin::NodeAddress0, INPUT);
+    pinMode(pin::NodeAddress1, INPUT);
+    pinMode(pin::NodeAddress2, INPUT);
+    pinMode(pin::NodeAddress3, INPUT);
+    delay(250);   //I want to get rid of this but previously I needed at least some delay before doing the detect to get a valid read
+    }
+  
+  if (nodeIDdetermine)
+    {
+    //Read the four digital addressing pins
+    uint8_t NodeAddressBit0 = digitalRead(pin::NodeAddress0);
+    uint8_t NodeAddressBit1 = digitalRead(pin::NodeAddress1)<<1;
+    uint8_t NodeAddressBit2 = digitalRead(pin::NodeAddress2)<<2;
+    uint8_t NodeAddressBit3 = digitalRead(pin::NodeAddress3)<<3;
+    //Use the read addresses to convert into an int for nodeID
+    uint8_t NodeIDAddressRead;
+    NodeIDAddressRead = NodeAddressBit0 + NodeAddressBit1 + NodeAddressBit2 + NodeAddressBit3;
+    nodeID = NodeIDAddressRead;     //Setting the Global NodeID to detected NodeID
+    }
+  else
+    nodeID = nodeIDfromEEPROM;
+  return;
+
+  //Need to tweak structure of passing in and returning nodeID
+  //Need to implememt any behavior for start up, reset et cetera.
+  //Do I need any delays? I did use one in the past but I'd like to eliminate or minimize it
+} */
 // -------------------------------------------------------------
 
 
@@ -147,25 +186,27 @@ void setup() {
   //Read pin 28 as digital input, if pulled high this is node 2, if pulled low it's node 3
   //I would like to write this into EEPROM and check on startup with state to make this not able to flip on a power cycle mid test/launch and cutout the setup time
 
-    pinMode(pin::NodeAddress0, INPUT);
+/*     pinMode(pin::NodeAddress0, INPUT);
     pinMode(pin::NodeAddress1, INPUT);
     pinMode(pin::NodeAddress2, INPUT);
-    delay(250);
+    pinMode(pin::NodeAddress3, INPUT);
+    delay(250); */
 /*     if (digitalRead(pin::NodeAddress2) == 1) {
     nodeID = 2;
   } else {
     nodeID = 3;
   } */
-  nodeID = 3;
-  startup = true;
+  nodeID = 3;       //For manually assigning NodeID isntead of the address read, make sure to comment out for operational use
+  startup = true;   // Necessary to set startup to true for the code loop so it does one startup loop for the state machine before entering regular loop behavior
 
   // ----- Hardware Abort Pin Setup ----- NOT CURRENTLY IN USE
+  // This hardware abort allows us to command the Teensy to reboot itself by pulling the reset pin to ground
 /*   pinMode(pin::reset, OUTPUT);
   digitalWrite(pin::reset, 1);
   pinMode(pin::abort, INPUT_PULLDOWN);
   attachInterrupt(digitalPinToInterrupt(pin::abort), abortReset, RISING);  */
 
-/*   // ----- Safety Pin Setup ----- // Should not be required anymore - state operations for valve enables should do it
+  // ----- Safety Pin Setup ----- // Should not be required anymore - state operations for valve enables should do it
   if (nodeID == 2) //Engine Node
     {
     pinMode(pin::HiPressHiVentSafe, OUTPUT);
@@ -178,12 +219,12 @@ void setup() {
     pinMode(pin::FuelDomeRegVentSafe, OUTPUT);
     pinMode(pin::LoxVentSafe, OUTPUT);
     pinMode(pin::FuelVentSafe, OUTPUT);
-    //digitalWrite(25, 1);
-    //digitalWrite(26, 1);
-    //digitalWrite(27, 1);
-    //digitalWrite(24, 1);
+/*     digitalWrite(25, 1);
+    digitalWrite(26, 1);
+    digitalWrite(27, 1);
+    digitalWrite(24, 1); */
     }
- */
+
 
 
 
@@ -206,7 +247,7 @@ void setup() {
 
 
   //assign which sample rate array to choose for each input enable
-  if (nodeID == 2) //Engine Node ADC pins to read sensors on
+/*   if (nodeID == 2) //Engine Node ADC pins to read sensors on
     {
     input_enablediff[0] = 1;        //TC
     input_enablediff[1] = 1;        //TC
@@ -229,8 +270,8 @@ void setup() {
     input_enable100[7] = 1;         //Lox Tank PT
     input_enable100[8] = 1;         //Fuel High Press PT
     input_enable100[9] = 1;         //Lox High Press PT
-    }
-/* 
+    } */
+
     if (nodeID == 2) //Engine Node ADC pins to read sensors on
     {
     input_enablediff[0] = 0;        //TC
@@ -254,7 +295,7 @@ void setup() {
     input_enable100[7] = 0;         //Lox Tank PT
     input_enable100[8] = 0;         //Fuel High Press PT
     input_enable100[9] = 0;         //Lox High Press PT
-    } */
+    }
     
 
   // pin setup

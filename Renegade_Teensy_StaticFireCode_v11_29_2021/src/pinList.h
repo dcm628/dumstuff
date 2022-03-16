@@ -10,13 +10,14 @@ namespace pin
     const int NodeAddress0{0};
     const int NodeAddress1{1};
     const int NodeAddress2{28};
-    //const int NodeAddress3{}; - Need to figure out this pin assignment to get the extra NodeID space
+    const int NodeAddress3{};   // Need to figure out this pin assignment to get the extra NodeID space
 
     // abort interrupt pins - Not fully implemented, need to test and check
     const int abort{29};
     const int reset{30};
     
-
+    const int Node2Node1{};  //These are for a non CAN bus digital I/O pin.
+    const int Node2Node2{};
 
 
 /*     // Igniter Pins - Node 2 - Engine Node
