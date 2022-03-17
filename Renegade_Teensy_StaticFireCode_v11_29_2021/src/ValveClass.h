@@ -30,11 +30,12 @@ class Valve
         const uint8_t fullDuty{255};                // full duty cycle for servo initial actuation
         const uint8_t holdDuty{};                   // partial duty cycle to hold valve in actuated state
         bool fireCommandBool;                       // Whether this valve is on the Ignition AutoSequence for FireCommand timer check
+        bool nodeIDCheck;                           // Whether this object should operate on this node
 
     public:
     
     // constructor, define the valve ID here, and the pin that controls the valve, setFireDelay is only parameter that can be left blank
-        Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, bool setFireCommandBool, int32_t setFireSequenceTime = 2147483648, uint8_t setHoldDuty = 64);
+        Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, bool setFireCommandBool, int32_t setFireSequenceTime = 2147483648, uint8_t setHoldDuty = 64, bool setNodeIDCheck = false);
 
     // a start up method, to set pins from within setup()
         void begin();
@@ -52,12 +53,16 @@ class Valve
         ValveState getState(){return state;}
         uint32_t getTimer(){return timer;}
         bool getFireCommandBool(){return fireCommandBool;}
+        bool getNodeIDCheck(){return nodeIDCheck;}
 
     // set functions, allows the setting of a variable
         void setState(ValveState newState) {state = newState; timer = 0;} //every time a state is set, the timer should reset
 
     // set the Fire Sequence bool function
         void setFireCommandBool(bool updatedFireCommandBool) {fireCommandBool = updatedFireCommandBool;}
+
+    // set the Node ID Check bool function
+        void setNodeIDCheck(bool updatedNodeIDCheck) {nodeIDCheck = updatedNodeIDCheck;}
 
     // functions with executables defined in ValveClasses.cpp
         void resetTimer();              // resets timer to zero, timer increments automatically in microseconds
@@ -79,11 +84,12 @@ class ValveEnable
         const uint8_t valveEnableNodeID;
         const uint32_t valveEnablePin;
         ValveEnableState state;
+        bool nodeIDCheck;                           // Whether this object should operate on this node
 
     public:
         
     // constructor
-        ValveEnable (uint32_t setValveEnableID,  uint32_t setValveEnablePin, uint8_t setValveEnableNodeID);
+        ValveEnable (uint32_t setValveEnableID,  uint32_t setValveEnablePin, uint8_t setValveEnableNodeID, bool setNodeIDCheck = false);
 
 
     // a start up method, to set pins from within setup()
@@ -95,9 +101,14 @@ class ValveEnable
         uint32_t getValveEnableNodeID(){return valveEnableNodeID;}
         uint8_t getValveEnablePin(){return valveEnablePin;}
         ValveEnableState getState(){return state;}   
+        bool getNodeIDCheck(){return nodeIDCheck;}
+
     // set functions, allows the setting of a variable
         void setState(ValveEnableState newState) {state = newState;}
-
+    
+    // set the Node ID Check bool function
+        void setNodeIDCheck(bool updatedNodeIDCheck) {nodeIDCheck = updatedNodeIDCheck;}
+    
     // samesies as above
         void stateOperations();
 

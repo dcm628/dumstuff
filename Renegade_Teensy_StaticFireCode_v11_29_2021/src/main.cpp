@@ -232,6 +232,14 @@ void setup() {
   currentState = static_cast<State>(EEPROM.read(stateAddress));
   startupStateCheck(currentState, currentCommand);
 
+  // -----Run Valve NodeID Check-----
+  ValveNodeIDCheck(valveArray, nodeID);
+
+  // -----Run Valve NodeID Check-----
+  ValveEnableNodeIDCheck(valveEnableArray, nodeID);
+
+  // -----Run Valve NodeID Check-----
+  PyroNodeIDCheck(pyroArray, nodeID);
 
   // -----Run Valve Setup-----
   valveSetUp(valveArray);
@@ -244,6 +252,7 @@ void setup() {
 
    // -----Run AutoSequence Setup-----
   autoSequenceSetUp(autoSequenceArray);
+
 
 
   //assign which sample rate array to choose for each input enable

@@ -3,8 +3,8 @@
 
 
 
-Pyro::Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, uint8_t setFirePin, uint32_t setLiveOutTime, bool setFireCommandBool, int32_t setFireSequenceTime)
-                : pyroID{setPyroID}, pyroNodeID{setPyroNodeID}, pyroType{setPyroType}, firePin{setFirePin}, liveOutTime{setLiveOutTime}, fireCommandBool{setFireCommandBool}, fireSequenceTime{setFireSequenceTime}
+Pyro::Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, uint8_t setFirePin, uint32_t setLiveOutTime, bool setFireCommandBool, int32_t setFireSequenceTime,  bool setNodeIDCheck)
+                : pyroID{setPyroID}, pyroNodeID{setPyroNodeID}, pyroType{setPyroType}, firePin{setFirePin}, liveOutTime{setLiveOutTime}, fireCommandBool{setFireCommandBool}, fireSequenceTime{setFireSequenceTime}, nodeIDCheck{setNodeIDCheck}
 {
     switch (pyroType)
     {
@@ -24,8 +24,11 @@ Pyro::Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, uin
 
 void Pyro::begin()
 {
-    pinMode(firePin, OUTPUT);
-    digitalWrite(firePin, 0);
+    if (nodeIDCheck)
+    {
+        pinMode(firePin, OUTPUT);
+        digitalWrite(firePin, 0);
+    }
 }
 
 void Pyro::resetTimer()

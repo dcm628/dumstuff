@@ -37,6 +37,11 @@ void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& node
     // iterate through valve array and run the stateOperations method
     for(auto valveEnable : valveEnableArray)
     {
+/*         Serial.print("valveEnableID: ");
+        Serial.print(valveEnable->getValveEnableID());
+        Serial.print(", valve NodeIDCheck bool: ");
+        Serial.println(valveEnable->getNodeIDCheck()); */
+        
         if (valveEnable->getValveEnableNodeID() == nodeIDReadIn)
 /*             Serial.println("valve node ID");
             Serial.println(valveEnable->getValveEnableNodeID());
@@ -48,6 +53,7 @@ void valveEnableTasks(const std::array<T, size>& valveEnableArray, uint8_t& node
             Serial.print(" valveEnablePin: ");
             Serial.println(valveEnable->getValveEnablePin()); */
             
+            //Serial.print("LoopRan");
             {
             valveEnable->stateOperations();
             //Serial.print("LoopRan");
@@ -166,6 +172,45 @@ void autoSequencePyroUpdate(const std::array<T, size>& pyroArray, int64_t& fireC
         
     }
 
+}
+
+template <typename T, std::size_t size>
+void ValveNodeIDCheck(const std::array<T, size>& valveArray, uint8_t nodeIDfromMain)
+{
+    // iterate through valve array and run the stateOperations method
+    for (auto valve : valveArray)
+    {
+        if (valve->getValveNodeID() == nodeIDfromMain)
+        {
+            valve->setNodeIDCheck(true);
+        }
+    }
+}
+
+template <typename T, std::size_t size>
+void ValveEnableNodeIDCheck(const std::array<T, size>& valveEnableArray, uint8_t nodeIDfromMain)
+{
+    // iterate through valve array and run the stateOperations method
+    for (auto valveEnable : valveEnableArray)
+    {
+        if (valveEnable->getValveEnableNodeID() == nodeIDfromMain)
+        {
+            valveEnable->setNodeIDCheck(true);
+        }
+    }
+}
+
+template <typename T, std::size_t size>
+void PyroNodeIDCheck(const std::array<T, size>& pyroArray, uint8_t nodeIDfromMain)
+{
+    // iterate through valve array and run the stateOperations method
+    for (auto pyro : pyroArray)
+    {
+        if (pyro->getPyroNodeID() == nodeIDfromMain)
+        {
+            pyro->setNodeIDCheck(true);
+        }
+    }
 }
 
 /* // This function outputs a bitset contianing flags about the valve status, to be sent back to the console via CAN

@@ -28,11 +28,12 @@ class Pyro
         PyroState state;
         const uint32_t liveOutTime;
         bool fireCommandBool;             // Whether this valve is on the Ignition AutoSequence for FireCommand timer check
+        bool nodeIDCheck;                           // Whether this object should operate on this node
 
     public:
     
     // constructor, define the valve ID here, and the pin that controls the valve, setFireDelay is only parameter that can be left blank
-        Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, uint8_t setFirePin, uint32_t setLiveOutTime, bool setFireCommandBool, int32_t setFireSequenceTime = 2147483648); 
+        Pyro(uint32_t setPyroID, uint32_t setPyroNodeID, PyroType setPyroType, uint8_t setFirePin, uint32_t setLiveOutTime, bool setFireCommandBool, int32_t setFireSequenceTime = 2147483648, bool setNodeIDCheck = false); 
     // Alternate constructor with future full implementation, needs the clonedpyro features still
     //    Pyro(int setPyroID, int setPyroNodeID, int setFirePin, int setShuntPin, int setContPin, uint32_t setFireDelay = 0);
 
@@ -53,12 +54,16 @@ class Pyro
         PyroState getState(){return state;}
         uint32_t getTimer(){return timer;}
         bool getFireCommandBool(){return fireCommandBool;}
+        bool getNodeIDCheck(){return nodeIDCheck;}
 
     // set functions, allows the setting of a variable
         void setState(PyroState newState) {state = newState; timer = 0;} //every time a state is set, the timer should reset
     
     // set the Fire Sequence bool function
         void setFireCommandBool(bool updatedFireCommandBool) {fireCommandBool = updatedFireCommandBool;}
+
+    // set the Node ID Check bool function
+        void setNodeIDCheck(bool updatedNodeIDCheck) {nodeIDCheck = updatedNodeIDCheck;}
 
     // functions with executables defined in ValveClasses.cpp
         void resetTimer();              // resets timer to zero, timer increments automatically in microseconds

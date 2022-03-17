@@ -2,8 +2,8 @@
 #include <Arduino.h>
 
 
-Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, bool setFireCommandBool, int32_t setFireSequenceTime, uint8_t setHoldDuty)
-                : valveID{setValveID}, valveNodeID{setValveNodeID}, valveType{setValveType}, pin{setPin}, fullDutyTime{setFullDutyTime}, fireCommandBool{setFireCommandBool}, fireSequenceTime{setFireSequenceTime}, holdDuty{setHoldDuty}
+Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveType, uint8_t setPin, uint32_t setFullDutyTime, bool setFireCommandBool, int32_t setFireSequenceTime, uint8_t setHoldDuty,  bool setNodeIDCheck)
+                : valveID{setValveID}, valveNodeID{setValveNodeID}, valveType{setValveType}, pin{setPin}, fullDutyTime{setFullDutyTime}, fireCommandBool{setFireCommandBool}, fireSequenceTime{setFireSequenceTime}, holdDuty{setHoldDuty}, nodeIDCheck{setNodeIDCheck}
 {
     switch (valveType)
     {
@@ -21,22 +21,28 @@ Valve::Valve(uint32_t setValveID, uint32_t setValveNodeID, ValveType setValveTyp
     
 }
 
-ValveEnable::ValveEnable(uint32_t setValveEnableID, uint32_t setValveEnablePin, uint8_t setValveEnableNodeID)
-                : valveEnableID{setValveEnableID}, valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}
+ValveEnable::ValveEnable(uint32_t setValveEnableID, uint32_t setValveEnablePin, uint8_t setValveEnableNodeID,  bool setNodeIDCheck)
+                : valveEnableID{setValveEnableID}, valveEnablePin{setValveEnablePin}, valveEnableNodeID{setValveEnableNodeID}, nodeIDCheck{setNodeIDCheck}
 {
     
 }
 
 void Valve::begin()
 {
-    pinMode(pin, OUTPUT);
-    analogWrite(pin, 0);
+    if (nodeIDCheck)
+    {
+        pinMode(pin, OUTPUT);
+        analogWrite(pin, 0);
+    }
 }
 
 void ValveEnable::begin()
 {
-    pinMode(valveEnablePin, OUTPUT);
-    digitalWrite(valveEnablePin, 0);
+    if (nodeIDCheck)
+    {
+        pinMode(valveEnablePin, OUTPUT);
+        digitalWrite(valveEnablePin, 0);
+    }
 }
 
 void Valve::resetTimer()
@@ -151,22 +157,25 @@ void Valve::stateOperations()
 
 void ValveEnable::stateOperations()
 {
-    switch (state)
+    if (nodeIDCheck)
     {
-/*     Serial.print("valveEnableID: ");
-    Serial.print(valveEnableID);
-    Serial.print(" valveEnablePin: ");
-    Serial.println(valveEnablePin); */
-        case ValveEnableState::On:
-            {
-            digitalWrite(valveEnablePin, 1);
-            }
-        case ValveEnableState::Off:
-            {
-            digitalWrite(valveEnablePin, 0);
-            }
-    default:
-        break;
-    
+    //Serial.print("LoopRan");
+        switch (state)
+        {
+    /*     Serial.print("valveEnableID: ");
+        Serial.print(valveEnableID);
+        Serial.print(" valveEnablePin: ");
+        Serial.println(valveEnablePin); */
+            case ValveEnableState::On:
+                {
+                digitalWrite(valveEnablePin, 1);
+                }
+            case ValveEnableState::Off:
+                {
+                digitalWrite(valveEnablePin, 0);
+                }
+        default:
+            break;
+        }
     }
 }
